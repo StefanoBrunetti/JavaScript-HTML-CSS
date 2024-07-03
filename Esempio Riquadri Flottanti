@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-type"
+	content="text/html;charset=UTF-8"/>
+	<title>Esempio di HTML 5 e CSS 3 </title>
+</head>
+<style>
+div.relative
+	{
+	position: relative;
+	left: 100px;
+	padding-left: 15px;
+	font-family: verdana;
+	height: 500px;
+	width: 500px;
+	border: double;
+	align-content: center;
+	}
+
+div.absolute
+	{
+	position: absolute;
+	top: 350px;
+	left: 700px;
+	padding-left: 15px;
+	font-family: verdana;
+	height: 300px;
+	width: 500px;
+	border: double;
+	align-content: center;
+	}
+
+	.m {color: red} 
+footer
+	{
+	height: 200px;
+	width: 500px;
+	}
+</style>
+
+
+<body>
+
+	<!--il contenuto della pagina-->
+	<h1>Titolo della Pagina</h1>
+	<div class="relative">Lorem Ipsum è un testo segnaposto utilizzato nel settore della tipografia e della stampa. <blockquote>Lorem Ipsum è considerato il testo segnaposto standard sin dal sedicesimo secolo, quando un anonimo tipografo prese una cassetta di caratteri e li assemblò per preparare un testo campione. È sopravvissuto non solo a più di cinque secoli, ma anche al passaggio alla videoimpaginazione, pervenendoci sostanzialmente inalterato. Fu reso popolare, negli anni ’60, con la diffusione dei fogli di caratteri trasferibili “Letraset”, che contenevano passaggi <span class="m">del Lorem Ipsum, e più recentemente da software di impaginazione come</span> Aldus PageMaker, che includeva versioni del Lorem Ipsum.</blockquote></div>
+	
+	<div class="absolute">
+	È sopravvissuto non solo a più di cinque secoli, ma anche al passaggio alla videoimpaginazione, pervenendoci sostanzialmente inalterato. Fu reso popolare, negli anni ’60, con la diffusione dei fogli di caratteri trasferibili “Letraset”, che contenevano passaggi <span class="m">del Lorem Ipsum, e più recentemente da software di impaginazione come</span> Aldus PageMaker, che includeva versioni del Lorem Ipsum.
+	</div>
+	
+	<footer>Lorem Ipsum è un testo segnaposto utilizzato nel settore della tipografia e della stampa. Lorem Ipsum è considerato il testo segnaposto standard sin dal sedicesimo secolo, quando un anonimo tipografo prese una cassetta di caratteri e li assemblò per preparare un testo campione.
+
+	</footer>
+</body>
+</html>
