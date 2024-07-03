@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Termotecnica</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<style type="text/css">
+
+  header {
+  background-color: #white;
+  padding: 5px;
+  text-align: center;
+}
+  .container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Definisce 4 colonne di uguale larghezza */
+  gap: 5px; /* Spaziatura tra le colonne */
+}
+
+.colonna {
+  padding: 5px;
+  background-color: #eee;
+  text-align: center;
+}
+</style>
+<body>
+  <header>Termotecnica</header>
+  <div class="container">
+    <div class="colonna">Colonna 1</div>
+    <div class="colonna">Colonna 2</div>
+    <div class="colonna">Colonna 3</div>
+    <div class="colonna">Colonna 4</div>
+  </div>
+  <script type="text/javascript"></script>
+</body>
+</html>
