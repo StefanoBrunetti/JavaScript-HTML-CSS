@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Calcolo Piastra a Sbalzo</title>
+<style>
+header {
+  background-color: #f0f0f0;
+  padding: 5px;
+  text-align: center;
+}
+
+#main {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+#sidebar1 {
+  background-color: #ddd;
+  padding: 20px;
+}
+
+#main-content {
+  padding: 20px;
+}
+
+#sidebar2 {
+  background-color: #ddd;
+  align-content: center;
+  padding: 20px;
+}
+
+footer {
+  background-color: #f0f0f0;
+  padding: 15px;
+  text-align: center;
+}
+
+#sinistro {
+  
+  text-align: right;
+  line-height: 28px;
+  font-family: sans-serif; 
+
+}
+#destro {
+  
+  text-align: left;
+  line-height: 27px;
+  font-family: sans-serif; 
+}
+
+h1,h2,h3,h4,h5,h6, p {
+  font-family: sans-serif;
+
+}
+
+h1,h2,h5 {
+  text-shadow: 2px 2px 5px #888888;
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>PIASTRA A SBALZO</h1>
+</header>
+
+<div id="main">
+  <div id="sidebar1">
+    <h2 align="right">DATI DI CALCOLO</h2>
+    
+    <form id="sinistro" action="#" method="post" name="label">
+   <!-- <div class="flexbox1"> -->
+<p>Descrizione<br>
+  <hr>
+  <label>Lunghezza [l]: </label><br>
+<label>Larghezza [w]: </label><br>
+<label>Spessore [t]: </label><br>
+<label>Modulo di Young [E]: </label><br>
+<label>Forza applicata all'estremità della piastra [F]: </label><br>
+<hr>
+<p>
+<label>Distanza dall'estremità dalla superficie media [y]: </label><br>
+<label>Momento d'inerzia della piastra [I]: </label><br>
+<label>Momento max generato [M]: </label><br>
+<label>Stress nella piastra [σ]: </label><br>
+<label>Freccia della piastra [δ]: </label>
+<hr>
+</form>
+  </div>
+
+  <div id="main-content">
+    <h2>INSERIMENTO DATI</h2>
+    <p></p>
+    <form id="destro" action="#" method="post" name="input">
+   <!-- <div class="flexbox1"> -->
+<p>Caselle colorate sono calcolate<br>
+  <hr>
+<input type="number" name="campo1" size="20" value="150"> [mm]<br>
+<input type="number" name="campo2" size="20" value="100"> [mm]<br>
+<input type="number" name="campo3" size="20" value="10"> [mm]<br>
+<input type="number" name="campo4" size="20" value="210000"> [MPa]<br>
+<input type="number" name="campo5" size="20" value="2000"> [N]
+<hr><p>
+<input readonly type="text" name="campo6" size="20" style="background-color: aquamarine;" value=""> [mm]<br>
+<input readonly type="text" name="campo7" size="20" style="background-color: aquamarine;" value=""> [mm&#8308;]<br>
+<input readonly type="text" name="campo8" size="20" style="background-color: aquamarine;" value=""> [Nm]<br>
+<input readonly type="text" name="campo9" size="20" style="background-color: aquamarine;" value=""> [kPa]<br>
+<input readonly type="text" name="campo10" size="20" style="background-color: aquamarine;" value=""> [mm]
+<hr>
+</p>
+</p>
+  </div>
+
+  <div id="sidebar2">
+    <img src="immagine.png" alt="Piastra a Sblazo"  width="360" height="271" >
+    <img src="formule.png" alt="Formule Calcolo" width="362" height="359" >
+  </div>
+</div>
+
+<footer>
+  <p><h5>&copy; - Made with JavaScript - by Brunetti 2024 -</h5></p>
+</footer>
+<script type="text/javascript">
+    
+      var c1,c2,c3,c4,c5,c6,c7,c8,c9,c10;
+
+      // funzione calcolo spessore medio
+      function tmedia(){
+        var v3;
+        v3=c3.value;
+        c6.value=v3/2;
+
+      }
+      // funzione calcolo Momento di inerzia
+      function momentoInerzia(){
+        var v2,v3;
+        v2=c2.value;
+        v3=c3.value;
+        c7.value=(v2*Math.pow(v3,3))/12;
+
+      }
+      // funzione Momento Massimo
+      function momentoMassimo(){
+        var v1,v5;
+        v1=c1.value;
+        v5=c5.value;
+        c8.value = (v5*(v1/1000));
+      }
+      // funzione Sollecitazione massima a flessione
+      function stressMassimo(){
+
+        var v6,v7,v8;
+        v6=c6.value;
+        v7=c7.value;
+        v8=c8.value;
+        c9.value = (v6*1000*v8)/v7;
+        
+      }
+
+      // funzione calcolo freccia
+      function freccia() {
+
+        var v1,v4,v5,v6;
+        v1=c1.value;
+        v4=c4.value;
+        v5=c5.value;
+        v7=c7.value;
+        c10.value = (v5*Math.pow(v1,3))/(3*v4*v7);
+
+      }
+
+      // Al caricamento della pagina
+      window.onload = function(){
+        var form = document.getElementById("destro");
+        c1 = form.campo1;
+        c2 = form.campo2;
+        c3 = form.campo3;
+        c4 = form.campo4;
+        c5 = form.campo5;
+        c6 = form.campo6;
+        c7 = form.campo7;
+        c8 = form.campo8;
+        c9 = form.campo9;
+        c10 = form.campo10;
+
+        
+         // Al cambio valore nell'imput
+         form.addEventListener("change", function(event) {
+        if (event.target === c1 || event.target === c2 || event.target === c3 || event.target === c4 || event.target === c5 || event.target === c6 || event.target === c7 || event.target === c8 || event.target === c9 || event.target === c10) {
+          tmedia();
+          momentoInerzia();
+        momentoMassimo();
+        stressMassimo();
+        freccia();
+        }
+      });
+
+
+
+        tmedia();
+        momentoInerzia();
+        momentoMassimo();
+        stressMassimo();
+        freccia();
+      }
+      
+    </script>
+</body>
+</html>
