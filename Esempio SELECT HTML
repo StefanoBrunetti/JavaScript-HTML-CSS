@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Esempio Select</title>
+</head>
+<body>
+<select id="mySelect" onchange="printSelectedOption()">
+
+</select><br>
+<input type="text" readonly id="c1" name="c1" value="-">
+<input type="text" readonly id="c2" name="c2" value="-"><br>
+<button onclick="printSelectedOption()">Stampa selezione</button>
+<script>
+	window.onload=function(){
+		var select = document.getElementById('mySelect');
+		var dbArray = new Array ('','S235JR','S275JR','S350JR','S440R','AISI 304','AISI 316');
+		
+		for (var i=0; i<dbArray.length; i++) {
+			select.options[select.options.length]= new Option (dbArray[i],i);
+		}
+	}
+
+function printSelectedOption() {
+	var dbDensita = new Array (7.85,7.85,7.85,7.85,7.85,8.00,8.00)
+    const selectElement = document.getElementById('mySelect');
+    const selectedOption = selectElement.options[selectElement.selectedIndex];
+    c1.value = selectedOption.textContent;
+    c2.value = dbDensita[Number(selectedOption.value)];
+    console.log('Valore selezionato:', selectedOption.value);
+    console.log('Testo selezionato:', selectedOption.textContent);
+}
+</script>
+</body>
+</html>
