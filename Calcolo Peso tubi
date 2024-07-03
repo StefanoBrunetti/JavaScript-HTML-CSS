@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="description" content="Tubazioni di Processo Caratterisciche tecnologiche">
+  <meta name="keywords" content="HTML, CSS, JavaScript">
+  <meta name="author" content="Stefano Brunetti">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peso Tubi</title>
+
+<style type="text/css">
+div {
+    width: 500px;
+    margin: 50px auto;
+    background: gray;
+    padding: 25px;
+    overflow: hidden;
+    -moz-border-radius: 50px;
+    -webkit-border-radius: 50px;
+    border-radius: 50px;
+}
+input {
+    text-align:right;
+    font-family: Arial, Helvetica, sans-serif;
+    font: 14pt/1.5em Arial, Helvetica, sans-serif;
+    align-content: left;
+    border: 1px solid #323232; /* Bordo */
+    height: 30px; /* Altezza */
+    line-height: 30px; /* Altezza di riga */
+    width: 150px; /* Larghezza */
+    padding: 0 15px; /* Padding */
+    float: left;
+}
+label {
+    font-family: Arial, Helvetica, sans-serif;
+    font: 14pt/1.5em Arial, Helvetica, sans-serif;
+    align-content: right;
+    display: block; /* Impostiamo la label come elemento blocco */
+    line-height: 30px; /* Altezza di riga */
+    width: 300px; /* Larghezza */
+    float: left;
+}
+
+h2 {
+   font-family: Arial, Helvetica, sans-serif; 
+}
+body {
+    ;
+}
+</style>
+
+<script type="text/javascript">
+        
+function calcolaPeso(){
+    var errore = " ";
+    var messaggio = " ";
+    var diametro = window.prompt("inserisci Diametro [mm]: ", "1");
+    var spessore = window.prompt("inserisci spessore [mm]: ", "1");
+    var lunghezza = window.prompt("inserisci lunghezza condotto [m]: ", "1");
+    if (diametro == null || diametro == "" || diametro == "0" || spessore == null || spessore == "" || spessore == "0" || lunghezza == null || lunghezza == "" || lunghezza == "0"){
+        errore = "Valori Errati";
+        alert("Non hai inserito valori corretti!");
+        document.getElementById("visualizza").innerHTML= errore;}
+    else {
+        var peso = 25*(parseFloat(diametro)/1000)*parseFloat(spessore)*parseFloat(lunghezza);
+        var superficieLamiera = ((parseFloat(diametro)/1000)*Math.PI)*parseFloat(lunghezza);
+        var fondoVernice = superficieLamiera/13;
+        messaggio = String(peso);
+        document.getElementById("diametrotubo").value = diametro;
+        document.getElementById("spessoretubo").value = spessore;
+        document.getElementById("lunghezzaTubo").value = lunghezza;
+        document.getElementById("pesokgm").value = messaggio;
+        document.getElementById("superficie").value = superficieLamiera.toFixed(3);
+        document.getElementById("vernice").value = fondoVernice.toFixed(5);
+
+    } 
+
+};
+
+</script>
+</head>
+ 
+<body>
+<h2 align='center'>Peso Tubi</h2>
+
+<div id="visualizza">
+<label>Diametro [mm]: </label><input type="text" id="diametrotubo" readonly=True>
+<label>Spessore [mm]: </label><input type="text" id="spessoretubo" readonly=True>
+<label>Lunghezza [m]: </label><input type="text" id="lunghezzaTubo" readonly=True>
+<label>Peso   [kg]: </label><input type="text" id="pesokgm" readonly=True>
+
+<label>Superficie Lamiera [m²]: </label><input type="text" id="superficie" readonly=True>
+<label>Fondo protettivo [l]: </label><input type="text" id="vernice" readonly=True>
+<label>Isolamento Strati [Nr]: </label><input type="text" id="stratiIsolamnto" readonly=True>
+
+<label>Spessore Strato [mm]: </label><input type="text" id="stratoSpessore" readonly=True>
+<label>Superficie Isolamento [mm]: </label><input type="text" id="areaIsolamento" readonly=True>
+    <div id="pulsante">
+    <center>
+<button onclick="calcolaPeso()"> Calcola Peso </button>
+    </center>
+    </div>
+</div>
+</body>
+</html>
