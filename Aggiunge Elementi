@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Aggiunta di elementi a form</title>
+<script type="text/javascript">
+// Funzione che permette di aggiungere elementi al form (ESEMPIO 1)
+function AggiungiRiga(n_righe){
+	var numero_righe = n_righe.value;
+	var box = document.getElementById('box_righe');
+	if(isNaN(numero_righe)==true){
+		box.innerHTML='';
+	}else{
+	    var righe = "";
+		// Inserisco una riga ad ogni ciclo
+		for(i=1; i<=numero_righe; i++){
+			righe = righe+""+i+") Descrizione dolce : <input type='text' name='rata"+i+" size='10' maxlength='10'/><br/>";
+		}
+		// Aggiorno il contenuto del box che conterrà gli elementi aggiunti
+		box.innerHTML=righe;
+	}
+}
+// Funzione che permette di aggiungere elementi al form (ESEMPIO 2)
+function AggiungiRata(rate){
+	var numero_rate = rate.value;
+	var box = document.getElementById('box_rate');
+	if(numero_rate==""){
+		box.innerHTML='';
+	}else{
+		if(isNaN(numero_rate)==true){
+			box.innerHTML='';
+		}else{
+			var righe = "";
+			var importo = (parseInt(document.form2.importo.value)/parseInt(numero_rate));
+			// Inserisco una riga ad ogni ciclo
+			for(i=1; i<=numero_rate; i++){
+				righe = righe + "Rata n°"+i+" : <input type='text' name='rata"+i+" size='10' value='"+importo+"' maxlength='10'/><br/>";
+			}
+			// Aggiorno il contenuto del box che conterrà gli elementi aggiunti
+			box.innerHTML=righe;
+		}
+	}
+}
+</script>
+</head>
+
+<body>
+<h2>Esempio 1</h2>
+<!-- Form di esempio [AGGIUNTA DI SEMPLICI RIGHE DI INPUT] -->
+<form method="post" action="#" name="form1">
+<table border="0">
+<tr><td>Ti piacciono i dolci?</td><td></td></tr>
+<tr><td>Quanti sono i tuoi dolci preferiti?</td><td><input type="text" name="righe" maxlength="2" onkeyup="AggiungiRiga(this)"/></td></tr>
+</table>
+<span id='box_righe'>
+<!-- Box che conterrà le righe aggiunte. Inizialmente vuoto! -->
+</span>
+</form>
+<br/>
+<h2>Esempio 2</h2>
+<!-- Form di esempio [SPALMAMENTO IN RATE DI UN IMPORTO] -->
+<form method="post" action="#" name="form2">
+<table border="0">
+<tr><td>Euro : </td><td><input type='text' name='importo' value="0" maxlength="10" /></td></tr>
+<tr><td>Numero di rate : </td><td><input type="text" name="rate" maxlength="2" onkeyup="AggiungiRata(this)"/></td></tr>
+</table>
+<span id='box_rate'>
+<!-- Box che conterrà le righe aggiunte. Inizialmente vuoto! -->
+</span>
+</form>
+</body>
+</html>
