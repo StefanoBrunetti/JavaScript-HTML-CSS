@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formule Utili</title>
+  
+ 
+
+
+</head>
+<style type="text/css">
+
+  body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #FCFCFC;
+  padding: 10px;
+  text-align: center;
+}
+
+.contenuto {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Definisce 4 colonne con larghezza uguale */
+  gap: 15px; /* Spazio tra le colonne */
+  padding: 10px;
+}
+
+.colonna {
+  background-color: #fff;
+  margin: 0;
+  padding: 5px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+footer {
+  background-color: #f0f0f0;
+  text-align: center;
+  padding: 5px;
+}
+.Sx {
+  text-align: right;
+}
+
+h1 {
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+label {
+  line-height: 1.32em;
+}
+
+select {
+  width: 140px; /* Imposta la larghezza a 150 pixel */
+}
+input {
+  width: 80px; /* Imposta la larghezza a 150 pixel */
+}
+
+#cmpa, #cmpb, #cmpc {
+  margin-left: 35px;
+} 
+#cmpd {
+  margin-left: 10px;
+}
+#cse, #csi{
+  margin-left: 40px;
+}
+#cp, #cpc  {
+  margin-left: 42px;
+}
+
+</style>
+<body>
+  <header>
+    <h1>Formule Utili</h1>
+  </header>
+
+  <section class="contenuto">
+    <div class="colonna">
+      <h3 class="Sx">Descrizione</h3>
+      <hr>
+      <form class="Sx">
+        <label>Diametro Condotto : </label><br>
+        <label>Lunghezza : </label><br>
+        <label>Spessore : </label><br>
+        <label>Materiale : </label><br>
+        <label>Peso Specifico : </label><br>
+        <hr>
+        <label>Perimetro : </label><br>
+        <label>Superficie Esterna : </label><br>
+        <label>Superficie Condotto : </label><br>
+        <label>Peso condotto : </label><br>
+        <hr>
+      </form>
+    </div>
+
+    <div class="colonna">
+      <h3>Inserimento dati</h3>
+      <hr>
+
+      <form id="CSx" class="CSx">
+        <input type="number" id="cmp01" name="cmp01" min="1" max="6000" value="1000"> [mm] 
+        <input type="number" id="cmpa" name="cmpa" readonly > [m]<br>
+        <input type="number" id="cmp02" name="cmp01" min="1" max="6000" value="1000"> [mm]
+        <input type="number" id="cmpb" name="cmpb" readonly > [m]<br>
+        <input type="number" id="cmp03" name="cmp03" min="0.5" max="150" value="1"> [mm]
+        <input type="number" id="cmpc" name="cmpc" readonly > [m]<br>
+        <select id="mySelect" onchange="selezioneMateriale()"> </select><br>
+        
+        <input type="text" id="c1" name="c1" readonly value="-"> [kg/dm&#179]
+        <input type="number" id="cmpd" name="cmpd" readonly > [kg/m&#179]<br>
+        <hr>
+        <input type="text" id="c2" name="c2" readonly value="-">  [m ]
+        <button type="button" id="cpc" onclick="copia()">Copia Valore</button><br>
+        <input type="text" id="cmp06" readonly value="-"> [m&#178]
+        <button type="button" id="cse" onclick="copia()">Copia Valore</button><br>
+        <input type="text" id="cmp07" readonly value="-"> [m&#178]
+        <button type="button" id="csi" onclick="copia()">Copia Valore</button><br>
+        <input type="text" id="cmp08" readonly value="-"> [kg]
+        <button type="button" id="cp" onclick="copia()">Copia Valore</button><br>
+        <hr>
+        <button type="button" onclick="calcolaDati()">Calcola</button>
+
+      </form>
+    </div>
+
+    <div class="colonna">
+      <h3 class="Sx">Descrizione</h3>
+      <hr>
+    </div>
+
+    <div class="colonna">
+     <h3>Inserimento dati</h3>
+      <hr>
+    </div>
+   
+  </section>
+
+  <footer>
+    <p>&copy; Made with Javascript - CSS - HTML - Brunetti 2024 </p>
+  </footer>
+
+  <script type="text/javascript">
+window.onload=function(){
+    var select = document.getElementById('mySelect');
+    var dbArray = new Array ('','S235JR','S275JR','S350JR','S440JR','AISI 304','AISI 316','ALLUMINIO','RAME','OTTONE','LAMIERA ZINCATA','PVC');
+    
+    for (var i=0; i<dbArray.length; i++) {
+      select.options[select.options.length]= new Option (dbArray[i],i);
+    }
+
+    cmpa.value=cmp01.value/1000;
+    cmpb.value=cmp02.value/1000;
+    cmpc.value=cmp03.value/1000;
+  }
+
+function selezioneMateriale() {
+  var dbDensita = new Array(
+    7.85, 7.85, 7.85, 7.85, 7.85, 8.00, 8.00, 2.75, 8.96, 8.55, 7.90, 1.41
+  );
+    const selectElement = document.getElementById('mySelect');
+    const selectedOption = selectElement.options[selectElement.selectedIndex];
+    // c2.value = selectedOption.textContent;
+    c1.value = dbDensita[Number(selectedOption.value)];
+    cmpd.value=c1.value*1000;
+}
+
+function calcolaDati() {
+    cmpa.value=cmp01.value/1000;
+    cmpb.value=cmp02.value/1000;
+    cmpc.value=cmp03.value/1000;
+  var perimetro;
+  var superficieEsterna;
+  var superficieInterna;
+  var peso;
+
+  perimetro=cmpa.value*Math.PI;
+  c2.value=perimetro.toFixed(3);
+  superficieEsterna = perimetro*cmpb.value;
+  cmp06.value=superficieEsterna.toFixed(3);
+  superficieInterna=Math.PI*Math.pow((cmpa.value/2),2);
+  cmp07.value=superficieInterna.toFixed(3);
+  peso = c1.value*superficieEsterna*cmp03.value;
+  cmp08.value=peso.toFixed(3);
+
+}
+
+  </script>
+</body>
+</html>
