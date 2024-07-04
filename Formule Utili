@@ -113,7 +113,7 @@ input {
         <input type="number" id="cmpc" name="cmpc" readonly > [m]<br>
         <select id="mySelect" onchange="selezioneMateriale()"> </select><br>
         
-        <input type="text" id="c1" name="c1" readonly value="-"> [kg/dm&#179]
+        <input type="text" id="c1" name="c1" readonly> [kg/dm&#179]
         <input type="number" id="cmpd" name="cmpd" readonly > [kg/m&#179]<br>
         <hr>
         <input type="text" id="c2" name="c2" readonly value="-">  [m ]
