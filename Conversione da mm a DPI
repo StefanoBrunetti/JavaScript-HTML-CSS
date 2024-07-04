@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<!--
+AUTORE:         BRUNETTI STEFANO
+DATA:           06/10/2023
+PAGINA:         CONVERSIONE mm IN DPI
+REVISIONE:      0.0
+-->
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversione mm in DPI</title>
+
+</head>
+
+<!--
+CSS PARAMETRI
+-->
+
+<style type="text/css">
+body {
+    background-color: #000;
+    color: #fff;
+    font-family: Verdana, sans-serif;
+    font-size: 14px;
+}
+#form {
+    width: 500px;
+    margin: 50px auto;
+    background: #222;
+    padding: 25px;
+    overflow: hidden;
+    -moz-border-radius: 50px;
+    -webkit-border-radius: 50px;
+    border-radius: 50px;
+}
+
+h1 {
+    font-size: 16px;
+    color: #FCCC69;
+    margin-bottom: 20px;
+    text-align: center;
+    line-height:2 ;
+}
+label, input, textarea { /* Stili comuni agli elementi del form */
+    color: #dedede; /* Colore del testo */
+    float: left; /* Float a sinistra */
+    font-family: Verdana, sans-serif; /* Tipo di carattere per il testo */
+    margin: 10px 0; /* Margini */
+}
+label { /* Stili per la label */
+    display: block; /* Impostiamo la label come elemento blocco */
+    line-height: 30px; /* Altezza di riga */
+    width: 150px; /* Larghezza */
+}
+input, textarea { /* Stili per il campo di testo e per la textarea */
+    background: #1C1C1C; /* Colore di sfondo */
+    border: 1px solid #323232; /* Bordo */
+    color: #fff; /* Colore del testo */
+    height: 30px; /* Altezza */
+    line-height: 30px; /* Altezza di riga */
+    width: 300px; /* Larghezza */
+    padding: 0 10px; /* Padding */
+}
+input { 
+    padding-left: 30px;
+    text-align: center;
+}
+
+textarea { /* Stili specifici per la teaxtarea */
+    background: #1C1C1C url('images/social_balloon.png') no-repeat 235px 95px; /* Sfondo con immagine */
+    font-size: 12px;
+    height: 200px;
+    width: 320px;
+    overflow: hidden; /* disabilitare la scrollbar in IE */
+}
+.w3-button {
+    width:150px;
+}
+</style>
+
+<body>
+
+<script type="text/javascript">
+    
+    function mmTodpi(x,y){
+        var mymmTodpi = (x * y) / 25.4;
+        return mymmTodpi;
+    }
+   
+    function converti(){
+            var myLarghezza = document.myForm.larghezza.value;
+            var myAltezza = document.myForm.altezza.value;
+            var myRisoluzione = document.myForm.risoluzione.value;
+            var flLarghezza = parseFloat(myLarghezza);
+            var flAltezza = parseFloat(myAltezza);
+            var flRisoluzione = parseFloat(myRisoluzione);
+            var risLarghezza = mmTodpi(flLarghezza,flRisoluzione);
+            const Rs1 = risLarghezza.toFixed()
+            var risAltezza = mmTodpi(flAltezza,flRisoluzione);
+            const Rs2 = risAltezza.toFixed();
+            document.getElementById("larghezzadpi").value = Rs1;
+            document.getElementById("altezzadpi").value = Rs2;
+        }
+
+        function pulizia(){
+            document.getElementById("larghezzadpi").value = "0";
+            document.getElementById("altezzadpi").value = "0";
+            document.getElementById("larghezza").value = "0";
+            document.getElementById("altezza").value = "0";
+            document.getElementById("risoluzione").value = "0";
+        }
+
+        function memorizza(){
+            var M1 = document.getElementById("larghezzadpi").value
+            localStorage.setItem("M1",M1);
+            var M2 = document.getElementById("altezzadpi").value
+            localStorage.setItem("M2",M2);
+        }
+</script>
+
+   <!--
+DEFINIZIONE FORM
+--> 
+    <form name="myForm" action="#">
+        <div id="form">
+        <h1>Conversione mm in DPI
+            <img src="72ppi-300ppi.jpg" alt="Differenza di risoluzione">
+        </h1>
+        <label for="larghezza">Larghezza [mm]:</label><input type="text" name="larghezza" id="larghezza" required />
+        <label for="altezza">Altezza [mm]:</label><input type="text" name="altezza" id="altezza" required />
+        <label for="risoluzione">Risoluzione [DPI]:</label><input type="text" name="risoluzione" id="risoluzione" required />
+        <h1>Valori Convertiti</h1>
+        <label for="larghezzadpi">Larghezza in DPI:</label><input type="text" name="larghezzadpi" id="larghezzadpi" value="0" readonly />
+        <label for="altezzadpi">Altezza in DPI:</label><input type="text" name="altezzadpi" id="altezzadpi" value="0" readonly/>
+        
+                <div id="pulsante">
+                    <center>
+                        <button class="w3-button w3-yellow" id="calcola" name="calcola" onclick="converti()">CALCOLA </button>
+                        <button class="w3-button w3-yellow" id="cancella" name="cancella" onclick="pulizia()">CANCELLA</button>
+                        <button class="w3-button w3-yellow" id="copia" name="copia" onclick="memorizza()">COPIA</button>
+                        
+                    </center>
+                </div>
+        </div>
+
+</form>
+
+</body>
+
+</html>
