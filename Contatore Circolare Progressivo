@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bordo Circolare Progressivo</title>
+    <style>
+        .circle-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px;
+        }
+
+        .outer-circle {
+            width: 220px; 
+            height: 220px;
+            border-radius: 50%;
+            background: conic-gradient(red 0% 0%, black 0% 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .inner-circle {
+            width: 200px;  
+            height: 200px;
+            background-color: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .circle-content {
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            color: #333;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="circle-wrapper">
+        <div class="outer-circle">
+            <div class="inner-circle">
+                <div id="circle" class="circle-content">0%</div>
+            </div>
+        </div>
+    </div>
+    <input type="range" min="0" max="100" value="0" id="rangeInput" style="width: 100%;">
+    <script>
+        const outerCircle = document.querySelector('.outer-circle');
+        const rangeInput = document.getElementById('rangeInput');
+
+        rangeInput.addEventListener('input', function() {
+            let percentage = this.value;
+            outerCircle.style.background = `conic-gradient(red 0% ${percentage}%, black ${percentage}% 100%)`;
+            const c = document.getElementById("circle").innerHTML=percentage+"%";
+        });
+    </script>
+</body>
+</html>
