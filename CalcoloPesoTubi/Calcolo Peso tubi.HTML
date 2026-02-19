@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Tubazioni di Processo Caratteristiche tecnologiche">
+  <meta name="keywords" content="HTML, CSS, JavaScript">
+  <meta name="author" content="Stefano Brunetti">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peso Tubi · Calcolo professionale</title>
+  
+  <!-- Google Fonts e Font Awesome per icone -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <style type="text/css">
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #f0f5fa 0%, #e3eaf2 100%);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    /* Contenitore principale - design moderno */
+    .card {
+      width: 100%;
+      max-width: 700px;
+      margin: 20px auto;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 48px;
+      padding: 25px 35px;  /* Ridotto il padding verticale */
+      box-shadow: 0 25px 45px -15px rgba(0, 30, 60, 0.3),
+                  inset 0 1px 3px rgba(255,255,255,0.9);
+    }
+
+    h2 {
+      font-size: 2rem;  /* Leggermente ridotto */
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 15px;  /* Ridotto margine */
+      color: #0a2942;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-left: 6px solid #2563eb;
+      padding-left: 22px;
+    }
+
+    h2 i {
+      color: #2563eb;
+      font-size: 1.8rem;
+      background: linear-gradient(135deg, #2563eb, #1e4b8f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Griglia per allineamento perfetto - ridotto gap */
+    .form-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;  /* Ridotto da 12px a 6px */
+      margin: 15px 0 10px;  /* Ridotti margini */
+    }
+
+    /* Riga form con etichetta e input - altezza ridotta */
+    .form-row {
+      display: flex;
+      align-items: center;
+      min-height: 48px;  /* Ridotto da 58px a 48px */
+      background: rgba(255,255,255,0.5);
+      border-radius: 40px;  /* Leggermente ridotto */
+      padding: 0 8px 0 18px;  /* Ridotto padding */
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+
+    .form-row:hover {
+      background: rgba(255,255,255,0.8);
+      border-color: #cbd5e1;
+    }
+
+    /* Etichetta - larghezza fissa per allineamento */
+    .form-label {
+      width: 190px;  /* Leggermente ridotta */
+      font-weight: 600;
+      font-size: 0.9rem;  /* Ridotto font */
+      color: #1e405e;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: -0.01em;
+    }
+
+    .form-label i {
+      width: 22px;
+      color: #2563eb;
+      font-size: 1rem;
+      text-align: center;
+    }
+
+    /* Contenitore input + unità */
+    .input-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    /* Stile input - tutti modificabili tranne risultati calcolati */
+    .form-input {
+      font-family: 'Inter', monospace;
+      font-size: 0.95rem;  /* Ridotto font */
+      font-weight: 500;
+      padding: 8px 14px;  /* Ridotto padding */
+      border-radius: 30px;  /* Leggermente ridotto */
+      border: 1.5px solid #dde3ed;
+      background: white;
+      width: 150px;  /* Leggermente ridotta */
+      text-align: right;
+      transition: all 0.2s;
+      color: #0b2f4a;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 4px rgba(37,99,235,0.15);
+    }
+
+    /* Input readonly (risultati) con sfondo acquamarina */
+    .form-input[readonly] {
+      background: #d7f0ed;
+      border-color: #7fc9c2;
+      color: #0e4a5a;
+      font-weight: 600;
+      cursor: default;
+    }
+
+    .form-input[readonly]:focus {
+      border-color: #7fc9c2;
+      box-shadow: none;
+    }
+
+    /* Badge unità di misura - più compatti */
+    .unit-badge {
+      background: #1e3a5f;
+      padding: 4px 14px;  /* Ridotto padding */
+      border-radius: 30px;
+      font-size: 0.8rem;  /* Ridotto font */
+      font-weight: 600;
+      color: white;
+      letter-spacing: 0.02em;
+      min-width: 60px;  /* Ridotto */
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Sezione isolamento con bordo superiore - più compatta */
+    .isolamento-section {
+      margin-top: 15px;  /* Ridotto da 20px */
+      padding-top: 15px;  /* Ridotto da 20px */
+      border-top: 2px dashed rgba(37,99,235,0.2);
+      position: relative;
+    }
+
+    .section-badge {
+      position: absolute;
+      top: -10px;  /* Regolato */
+      left: 20px;
+      background: #2563eb;
+      color: white;
+      padding: 3px 16px;  /* Ridotto padding */
+      border-radius: 30px;
+      font-size: 0.75rem;  /* Ridotto font */
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      box-shadow: 0 4px 8px rgba(37,99,235,0.3);
+    }
+
+    .section-badge i {
+      margin-right: 5px;
+      font-size: 0.7rem;
+    }
+
+    /* Pulsante calcolo - più compatto */
+    .button-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;  /* Ridotto da 35px */
+    }
+
+    .calc-button {
+      background: linear-gradient(145deg, #2563eb, #1d4ed8);
+      border: none;
+      color: white;
+      font-size: 1.1rem;  /* Ridotto */
+      font-weight: 600;
+      padding: 12px 36px;  /* Ridotto padding */
+      border-radius: 50px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 15px 25px -8px #1e3a8a80;
+      transition: all 0.2s ease;
+      border: 1px solid rgba(255,255,255,0.2);
+      letter-spacing: 0.02em;
+    }
+
+    .calc-button:hover {
+      background: linear-gradient(145deg, #1d4ed8, #2563eb);
+      transform: scale(1.02);
+      box-shadow: 0 20px 30px -8px #1e3a8a;
+    }
+
+    .calc-button:active {
+      transform: scale(0.98);
+    }
+
+    .calc-button i {
+      font-size: 1.2rem;
+    }
+
+    /* Nota informativa */
+    .info-note {
+      text-align: center;
+      margin-top: 15px;  /* Ridotto */
+      font-size: 0.8rem;  /* Ridotto */
+      color: #577a9e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .info-note i {
+      color: #2563eb;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .card {
+        padding: 20px 15px;
+      }
+      .form-row {
+        flex-wrap: wrap;
+        min-height: auto;
+        padding: 8px;
+        border-radius: 25px;
+      }
+      .form-label {
+        width: 100%;
+        margin-bottom: 5px;
+      }
+      .input-wrapper {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+  </style>
+
+  <script type="text/javascript">
+    // Funzione per formattare numero con virgola
+    function formatWithComma(number, decimals) {
+      return number.toFixed(decimals).replace('.', ',');
+    }
+
+    function calcolaPeso() {
+      // Recupero valori dai campi di input (ora modificabili dall'utente)
+      let diametro = document.getElementById("diametroInput").value.trim();
+      let spessore = document.getElementById("spessoreInput").value.trim();
+      let lunghezza = document.getElementById("lunghezzaInput").value.trim();
+      
+      // Validazione
+      if (diametro === "" || spessore === "" || lunghezza === "") {
+        alert("❌ Inserisci tutti i valori numerici!");
+        return;
+      }
+      
+      // Sostituisci eventuali virgole con punti per il parsing
+      let d = parseFloat(diametro.replace(',', '.'));
+      let s = parseFloat(spessore.replace(',', '.'));
+      let l = parseFloat(lunghezza.replace(',', '.'));
+      
+      if (isNaN(d) || isNaN(s) || isNaN(l) || d <= 0 || s <= 0 || l <= 0) {
+        alert("❌ Valori non validi! Inserisci numeri positivi.");
+        return;
+      }
+
+      // Calcoli (stessa logica dell'originale)
+      // Peso = 25 * (diametro/1000) * spessore * lunghezza   (formula fornita)
+      let peso = 25 * (d / 1000) * s * l;  // kg
+      
+      // Superficie lamiera = (diametro/1000) * π * lunghezza
+      let superficieLamiera = (d / 1000) * Math.PI * l;  // m²
+      
+      // Fondo vernice = superficie / 13
+      let fondoVernice = superficieLamiera / 13;  // litri
+      
+      // Isolamento - formula più realistica
+      let spessoreIsolamentoStandard = 50; // mm
+      // Numero strati in base al diametro (più realistico)
+      let stratiIsolamento = Math.max(1, Math.ceil(d / 100)); 
+      
+      // Superficie isolamento (superficie cilindro esterno)
+      let raggioEsterno = (d / 1000) / 2 + (spessoreIsolamentoStandard / 1000) * stratiIsolamento;
+      let superficieIsolamento = 2 * Math.PI * raggioEsterno * l; // m²
+      
+      // Popolamento campi risultati (readonly) CON VIRGOLA
+      document.getElementById("pesokgm").value = formatWithComma(peso, 3);
+      document.getElementById("superficie").value = formatWithComma(superficieLamiera, 3);
+      document.getElementById("vernice").value = formatWithComma(fondoVernice, 3);
+      document.getElementById("stratiIsolamnto").value = stratiIsolamento;
+      document.getElementById("stratoSpessore").value = spessoreIsolamentoStandard;
+      document.getElementById("areaIsolamento").value = formatWithComma(superficieIsolamento, 3);
+      
+      // Feedback visivo
+      document.getElementById("visualizza").style.transition = "0.2s";
+      document.getElementById("visualizza").style.backgroundColor = "#f0f9ff";
+      setTimeout(() => {
+        document.getElementById("visualizza").style.backgroundColor = "";
+      }, 200);
+    }
+
+    // Inizializzazione con valori di esempio (in formato italiano con virgola)
+    window.onload = function() {
+      document.getElementById("diametroInput").value = "100";
+      document.getElementById("spessoreInput").value = "5";
+      document.getElementById("lunghezzaInput").value = "6";
+      // Calcolo automatico all'avvio
+      calcolaPeso();
+      
+      // Aggiungi listener per permettere input con virgola
+      const inputs = ["diametroInput", "spessoreInput", "lunghezzaInput"];
+      inputs.forEach(id => {
+        document.getElementById(id).addEventListener("keyup", function(e) {
+          // Permetti solo numeri, virgola e punto
+          this.value = this.value.replace(/[^0-9.,]/g, '');
+        });
+      });
+    };
+  </script>
+</head>
+
+<body>
+  <div class="card" id="visualizza">
+    <h2>
+      <i class="fas fa-pipe-valve"></i> 
+      Peso Tubi
+    </h2>
+    
+    <!-- INPUT MODIFICABILI (l'utente può cambiarli) -->
+    <div class="form-grid">
+      <!-- Diametro -->
+      <div class="form-row">
+        <span class="form-label"><i class="fas fa-arrows-alt-h"></i> Diametro</span>
+        <div class="input-wrapper">
+          <input type="text" id="diametroInput" class="form-input" value="100" placeholder="es: 100,5">
+          <span class="unit-badge">mm</span>
+        </div>
+      </div>
+      
+      <!-- Spessore -->
+      <div class="form-row">
+        <span class="form-label"><i class="fas fa-cube"></i> Spessore</span>
+        <div class="input-wrapper">
+          <input type="text" id="spessoreInput" class="form-input" value="5" placeholder="es: 5,2">
+          <span class="unit-badge">mm</span>
+        </div>
+      </div>
+      
+      <!-- Lunghezza -->
+      <div class="form-row">
+        <span class="form-label"><i class="fas fa-ruler"></i> Lunghezza</span>
+        <div class="input-wrapper">
+          <input type="text" id="lunghezzaInput" class="form-input" value="6" placeholder="es: 6,5">
+          <span class="unit-badge">m</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RISULTATI (readonly, sfondo acquamarina) - con virgola -->
+    <div class="form-grid">
+      <div class="form-row">
+        <span class="form-label"><i class="fas fa-weight-hanging"></i> Peso tubo</span>
+        <div class="input-wrapper">
+          <input type="text" id="pesokgm" class="form-input" readonly>
+          <span class="unit-badge">kg</span>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <span class="form-label"><i class="fas fa-border-all"></i> Superficie lamiera</span>
+        <div class="input-wrapper">
+          <input type="text" id="superficie" class="form-input" readonly>
+          <span class="unit-badge">m²</span>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <span class="form-label"><i class="fas fa-paint-brush"></i> Fondo protettivo</span>
+        <div class="input-wrapper">
+          <input type="text" id="vernice" class="form-input" readonly>
+          <span class="unit-badge">litri</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEZIONE ISOLAMENTO (con calcoli automatici) -->
+    <div class="isolamento-section">
+      <div class="section-badge">
+        <i class="fas fa-thermometer-half"></i> ISOLAMENTO TERMICO
+      </div>
+      
+      <div class="form-grid">
+        <div class="form-row">
+          <span class="form-label"><i class="fas fa-layer-group"></i> Strati isolamento</span>
+          <div class="input-wrapper">
+            <input type="text" id="stratiIsolamnto" class="form-input" readonly>
+            <span class="unit-badge">n°</span>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <span class="form-label"><i class="fas fa-arrow-up"></i> Spessore strato</span>
+          <div class="input-wrapper">
+            <input type="text" id="stratoSpessore" class="form-input" readonly>
+            <span class="unit-badge">mm</span>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <span class="form-label"><i class="fas fa-chart-area"></i> Sup. isolamento</span>
+          <div class="input-wrapper">
+            <input type="text" id="areaIsolamento" class="form-input" readonly>
+            <span class="unit-badge">m²</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PULSANTE CALCOLO -->
+    <div class="button-container">
+      <button onclick="calcolaPeso()" class="calc-button">
+        <i class="fas fa-calculator"></i> Calcola Peso
+      </button>
+    </div>
+    
+    <div class="info-note">
+      <i class="fas fa-edit"></i> Usa la virgola per i decimali (es: 100,5)
+      <i class="fas fa-arrow-right"></i> risultati con virgola
+    </div>
+  </div>
+</body>
+</html>
