@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<!--
+AUTORE:         BRUNETTI STEFANO
+DATA:           06/10/2023
+PAGINA:         CONVERSIONE mm IN DPI
+REVISIONE:      1.0 - Corretto errore di calcolo
+-->
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversione mm in DPI</title>
+
+<style type="text/css">
+body {
+    background-color: #000;
+    color: #fff;
+    font-family: Verdana, sans-serif;
+    font-size: 14px;
+}
+#form {
+    width: 500px;
+    margin: 50px auto;
+    background: #222;
+    padding: 25px;
+    overflow: hidden;
+    -moz-border-radius: 50px;
+    -webkit-border-radius: 50px;
+    border-radius: 50px;
+}
+
+h1 {
+    font-size: 16px;
+    color: #FCCC69;
+    margin-bottom: 20px;
+    text-align: center;
+    line-height:2 ;
+}
+label, input, textarea { /* Stili comuni agli elementi del form */
+    color: #dedede; /* Colore del testo */
+    float: left; /* Float a sinistra */
+    font-family: Verdana, sans-serif; /* Tipo di carattere per il testo */
+    margin: 10px 0; /* Margini */
+}
+label { /* Stili per la label */
+    display: block; /* Impostiamo la label come elemento blocco */
+    line-height: 30px; /* Altezza di riga */
+    width: 150px; /* Larghezza */
+}
+input, textarea { /* Stili per il campo di testo e per la textarea */
+    background: #1C1C1C; /* Colore di sfondo */
+    border: 1px solid #323232; /* Bordo */
+    color: #fff; /* Colore del testo */
+    height: 30px; /* Altezza */
+    line-height: 30px; /* Altezza di riga */
+    width: 300px; /* Larghezza */
+    padding: 0 10px; /* Padding */
+}
+input { 
+    padding-left: 30px;
+    text-align: center;
+}
+
+textarea { /* Stili specifici per la teaxtarea */
+    background: #1C1C1C;
+    font-size: 12px;
+    height: 200px;
+    width: 320px;
+    overflow: hidden; /* disabilitare la scrollbar in IE */
+}
+.w3-button {
+    width:150px;
+    background-color: #FCCC69;
+    color: #000;
+    border: none;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.w3-button:hover {
+    background-color: #ffd966;
+}
+</style>
+
+</head>
+
+<body>
+
+<script type="text/javascript">
+    
+    function mmToPixels(mm, dpi) {
+        // Formula corretta: pixel = (mm * dpi) / 25.4
+        return (mm * dpi) / 25.4;
+    }
+   
+    function converti() {
+        // Preleva i valori dai campi di input
+        var myLarghezza = document.myForm.larghezza.value;
+        var myAltezza = document.myForm.altezza.value;
+        var myRisoluzione = document.myForm.risoluzione.value;
+        
+        // Converti in numeri (sostituisci virgola con punto se necessario)
+        myLarghezza = myLarghezza.replace(',', '.');
+        myAltezza = myAltezza.replace(',', '.');
+        myRisoluzione = myRisoluzione.replace(',', '.');
+        
+        var flLarghezza = parseFloat(myLarghezza);
+        var flAltezza = parseFloat(myAltezza);
+        var flRisoluzione = parseFloat(myRisoluzione);
+        
+        // Verifica che i valori siano numeri validi
+        if (isNaN(flLarghezza) || isNaN(flAltezza) || isNaN(flRisoluzione)) {
+            alert("Inserisci valori numerici validi!");
+            return;
+        }
+        
+        // Calcola i pixel
+        var risLarghezza = mmToPixels(flLarghezza, flRisoluzione);
+        var risAltezza = mmToPixels(flAltezza, flRisoluzione);
+        
+        // Arrotonda ai valori interi
+        const Rs1 = Math.round(risLarghezza);
+        const Rs2 = Math.round(risAltezza);
+        
+        // Mostra i risultati
+        document.getElementById("larghezzadpi").value = Rs1;
+        document.getElementById("altezzadpi").value = Rs2;
+    }
+
+    function pulizia() {
+        document.getElementById("larghezza").value = "";
+        document.getElementById("altezza").value = "";
+        document.getElementById("risoluzione").value = "";
+        document.getElementById("larghezzadpi").value = "0";
+        document.getElementById("altezzadpi").value = "0";
+    }
+
+    function memorizza() {
+        var M1 = document.getElementById("larghezzadpi").value;
+        var M2 = document.getElementById("altezzadpi").value;
+        
+        localStorage.setItem("larghezzaPixel", M1);
+        localStorage.setItem("altezzaPixel", M2);
+        
+        alert("Valori memorizzati:\nLarghezza: " + M1 + " pixel\nAltezza: " + M2 + " pixel");
+    }
+    
+    // Funzione per caricare i valori memorizzati (opzionale)
+    function caricaMemorizzati() {
+        var M1 = localStorage.getItem("larghezzaPixel");
+        var M2 = localStorage.getItem("altezzaPixel");
+        
+        if (M1 && M2) {
+            document.getElementById("larghezzadpi").value = M1;
+            document.getElementById("altezzadpi").value = M2;
+        }
+    }
+    
+    // Aggiungi la possibilità di premere Invio per calcolare
+    document.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            converti();
+        }
+    });
+</script>
+
+   <!--
+DEFINIZIONE FORM
+--> 
+    <form name="myForm" onsubmit="return false;">
+        <div id="form">
+        <h1>Conversione mm in DPI</h1>
+        <div style="text-align: center; margin-bottom: 15px;">
+            <img src="72ppi-300ppi.jpg" alt="Differenza di risoluzione" style="max-width: 100%;">
+        </div>
+        <label for="larghezza">Larghezza [mm]:</label>
+        <input type="text" name="larghezza" id="larghezza" placeholder="es: 210" required />
+        
+        <label for="altezza">Altezza [mm]:</label>
+        <input type="text" name="altezza" id="altezza" placeholder="es: 297" required />
+        
+        <label for="risoluzione">Risoluzione [DPI]:</label>
+        <input type="text" name="risoluzione" id="risoluzione" placeholder="es: 300" required />
+        
+        <h1>Valori Convertiti in Pixel</h1>
+        <label for="larghezzadpi">Larghezza pixel:</label>
+        <input type="text" name="larghezzadpi" id="larghezzadpi" value="0" readonly />
+        
+        <label for="altezzadpi">Altezza pixel:</label>
+        <input type="text" name="altezzadpi" id="altezzadpi" value="0" readonly/>
+        
+                <div id="pulsante">
+                    <center>
+                        <button class="w3-button" id="calcola" name="calcola" onclick="converti()">📐 CALCOLA</button>
+                        <button class="w3-button" id="cancella" name="cancella" onclick="pulizia()">🗑️ CANCELLA</button>
+                        <button class="w3-button" id="copia" name="copia" onclick="memorizza()">📋 COPIA</button>
+                    </center>
+                </div>
+        </div>
+
+</form>
+
+<script>
+    // Carica automaticamente i valori memorizzati all'avvio
+    caricaMemorizzati();
+</script>
+
+</body>
+
+</html>
