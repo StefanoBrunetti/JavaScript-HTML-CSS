@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Componenti CAD - Brunetti 2026 -</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            font-size: 2em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1em;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 450px 1fr;  /* Colonna sinistra 450px, destra flessibile */
+            gap: 20px;
+            padding: 20px;
+            background: #f0f2f5;
+            min-height: calc(100vh - 180px);
+        }
+        
+        /* Colonna sinistra - Form + Anteprima */
+        .left-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        /* Card Form */
+        .form-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .form-card h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 3px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.3em;
+        }
+        
+        .form-group {
+            margin-bottom: 12px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #34495e;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .form-group label i {
+            color: #667eea;
+            margin-right: 4px;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 0.9em;
+            transition: all 0.3s;
+            background: #f8fafc;
+        }
+        
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: white;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 60px;
+            max-height: 100px;
+        }
+        
+        .char-counter {
+            text-align: right;
+            font-size: 0.75em;
+            color: #7f8c8d;
+            margin-top: 2px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            flex: 1;
+            min-width: 100px;
+        }
+        
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .btn-success { background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); color: white; }
+        .btn-warning { background: linear-gradient(135deg, #ecc94b 0%, #d69e2e 100%); color: white; }
+        .btn-secondary { background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%); color: white; }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        /* Card Anteprima */
+        .preview-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .preview-card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 3px solid #48bb78;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.2em;
+        }
+        
+        .preview-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .image-preview {
+            width: 400px;
+            height: 400px;
+            border: 3px solid #e2e8f0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: #f8fafc;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin: 0 auto;
+        }
+        
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .image-preview .placeholder {
+            text-align: center;
+            color: #a0aec0;
+            padding: 20px;
+        }
+        
+        .image-preview .placeholder i {
+            font-size: 4em;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .resolution-badge {
+            background: #667eea;
+            color: white;
+            padding: 6px 15px;
+            border-radius: 25px;
+            font-size: 0.9em;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 5px 0;
+        }
+        
+        .file-info {
+            width: 100%;
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 15px;
+            border-left: 4px solid #48bb78;
+            margin-top: 10px;
+        }
+        
+        .file-info p {
+            margin: 8px 0;
+            color: #4a5568;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95em;
+        }
+        
+        .file-info strong {
+            color: #2d3748;
+            min-width: 80px;
+            font-weight: 600;
+        }
+        
+        .dimension-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+        }
+        
+        /* Colonna destra - Solo tabella */
+        .right-column {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+        }
+        
+        .right-column h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #4299e1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1.3em;
+        }
+        
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .header-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .file-input {
+            padding: 8px 12px;
+            border: 2px dashed #667eea;
+            border-radius: 8px;
+            background: #f8fafc;
+            font-size: 0.85em;
+            width: 200px;
+        }
+        
+        .stats-badge {
+            background: #4299e1;
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+        
+        .scrollable-table {
+            flex: 1;
+            overflow-y: auto;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            max-height: 700px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+        }
+        
+        th {
+            background: #4299e1;
+            color: white;
+            padding: 12px 8px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            font-size: 0.85em;
+            white-space: nowrap;
+        }
+        
+        td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: middle;
+        }
+        
+        tr:hover {
+            background: #f7fafc;
+        }
+        
+        /* Colonne larghe per migliore leggibilità */
+        th:nth-child(1), td:nth-child(1) { min-width: 130px; } /* Nome File */
+        th:nth-child(2), td:nth-child(2) { min-width: 250px; max-width: 350px; } /* Descrizione */
+        th:nth-child(3), td:nth-child(3) { min-width: 100px; } /* Tipo */
+        th:nth-child(4), td:nth-child(4) { min-width: 70px; } /* Formato */
+        th:nth-child(5), td:nth-child(5) { min-width: 80px; } /* Immagine */
+        th:nth-child(6), td:nth-child(6) { min-width: 180px; } /* Percorso */
+        th:nth-child(7), td:nth-child(7) { min-width: 110px; } /* Azioni */
+        
+        .action-btns {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 4px 8px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+            font-weight: 600;
+            color: white;
+            transition: all 0.2s;
+        }
+        
+        .preview-btn { background: #48bb78; }
+        .edit-btn { background: #ecc94b; }
+        .delete-btn { background: #f56565; }
+        
+        .action-btn:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+        
+        .format-badge {
+            display: inline-block;
+            padding: 3px 6px;
+            border-radius: 10px;
+            font-size: 0.75em;
+            font-weight: 600;
+            background: #e2e8f0;
+            color: #2d3748;
+            white-space: nowrap;
+        }
+        
+        .format-badge.FCStd { background: #9f7aea; color: white; }
+        .format-badge.STEP { background: #48bb78; color: white; }
+        .format-badge.DWG { background: #4299e1; color: white; }
+        .format-badge.DXF { background: #ed8936; color: white; }
+        .format-badge.IGES { background: #ed64a6; color: white; }
+        .format-badge.SAT { background: #a0aec0; color: white; }
+        
+        .descrizione-cell {
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .percorso-cell {
+            max-width: 180px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .image-preview {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 1/1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                <span>📦 FreeCAD Component Manager</span>
+            </h1>
+            <p>Gestione completa con anteprime - Brunetti 2026 -</p>
+        </div>
+        
+        <div class="main-content">
+            <!-- Colonna Sinistra - Form + Anteprima -->
+            <div class="left-column">
+                <!-- Card Form -->
+                <div class="form-card">
+                    <h2>
+                        <span>📝 Inserisci Componente</span>
+                    </h2>
+                    
+                    <div class="form-group">
+                        <label><i>📄</i> Nome File *</label>
+                        <input type="text" id="nomeFile" placeholder="es: motore_elettrico">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i>📋</i> Descrizione *</label>
+                        <textarea id="descrizione" maxlength="255" placeholder="Descrizione dettagliata..."></textarea>
+                        <div class="char-counter" id="charCounter">0/255</div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i>🔧</i> Tipo</label>
+                            <input type="text" id="tipoComponente" placeholder="es: Motore">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><i>📁</i> Formato</label>
+                            <select id="formato">
+                                <option value="">Seleziona</option>
+                                <option value="FCStd">FCStd</option>
+                                <option value="STEP">STEP</option>
+                                <option value="DWG">DWG</option>
+                                <option value="DXF">DXF</option>
+                                <option value="IGES">IGES</option>
+                                <option value="SAT">SAT</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i>🔗</i> Link Immagine (1080x1080)</label>
+                        <input type="url" id="linkImmagine" placeholder="https://..." onchange="previewImage()">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i>📂</i> Percorso Archivio</label>
+                        <input type="text" id="percorsoArchivio" placeholder="es: C:\CAD\Archivio\">
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="aggiungiRecord()">➕ Aggiungi</button>
+                        <button class="btn btn-warning" onclick="resetForm()">🔄 Nuovo</button>
+                        <button class="btn btn-success" onclick="salvaSuFile()">💾 Salva CSV</button>
+                        <button class="btn btn-secondary" onclick="caricaDaFile()">📂 Carica CSV</button>
+                    </div>
+                </div>
+                
+                <!-- Card Anteprima -->
+                <div class="preview-card">
+                    <h3>
+                        <span>🖼️ Anteprima 1080x1080</span>
+                    </h3>
+                    
+                    <div class="preview-container">
+                        <div class="image-preview" id="imagePreview">
+                            <div class="placeholder">
+                                <i>🖼️</i>
+                                <p>Nessuna immagine selezionata</p>
+                                <p style="font-size: 0.8em;">Inserisci un link per l'anteprima</p>
+                            </div>
+                        </div>
+                        
+                        <span class="resolution-badge">
+                            <span>📐</span> 1080 x 1080
+                        </span>
+                        
+                        <div class="file-info" id="fileInfo">
+                            <p><strong>File:</strong> <span>-</span></p>
+                            <p><strong>Formato:</strong> <span>-</span></p>
+                            <p><strong>Tipo:</strong> <span>-</span></p>
+                            <p><strong>Percorso:</strong> <span>-</span></p>
+                        </div>
+                        
+                        <div id="dimensionWarning" class="dimension-warning" style="display: none;">
+                            ⚠️ Dimensioni non ottimali
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Colonna Destra - Solo Tabella -->
+            <div class="right-column">
+                <h2>
+                    <span>📋 Catalogo Componenti</span>
+                    <span class="stats-badge" id="recordStats">0</span>
+                </h2>
+                
+                <div class="table-header">
+                    <div class="header-controls">
+                        <input type="file" id="fileInput" accept=".csv" class="file-input">
+                    </div>
+                </div>
+                
+                <div class="scrollable-table">
+                    <table id="tabellaComponenti">
+                        <thead>
+                            <tr>
+                                <th>Nome File</th>
+                                <th>Descrizione</th>
+                                <th>Tipo</th>
+                                <th>Formato</th>
+                                <th>Immagine</th>
+                                <th>Percorso Archivio</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Array per memorizzare i componenti
+        let componenti = [];
+        let recordInModifica = null;
+        
+        // Carica dati iniziali dal localStorage
+        function caricaDatiIniziali() {
+            const datiSalvati = localStorage.getItem('componenti_cad_layout_finale');
+            if (datiSalvati) {
+                try {
+                    componenti = JSON.parse(datiSalvati);
+                } catch (e) {
+                    componenti = [];
+                }
+            }
+            aggiornaTabella();
+        }
+        
+        // Salva nel localStorage
+        function salvaNelStorage() {
+            localStorage.setItem('componenti_cad_layout_finale', JSON.stringify(componenti));
+            aggiornaStatistiche();
+        }
+        
+        // Aggiorna contatore caratteri
+        document.getElementById('descrizione').addEventListener('input', function() {
+            const length = this.value.length;
+            document.getElementById('charCounter').textContent = `${length}/255`;
+        });
+        
+        // Verifica dimensioni immagine
+        function checkImageDimensions(img) {
+            const warning = document.getElementById('dimensionWarning');
+            const tempImg = new Image();
+            tempImg.onload = function() {
+                if (this.width !== 1080 || this.height !== 1080) {
+                    warning.style.display = 'flex';
+                    warning.innerHTML = `⚠️ Dimensioni attuali: ${this.width}x${this.height} (ottimale: 1080x1080)`;
+                } else {
+                    warning.style.display = 'none';
+                }
+            };
+            tempImg.src = img.src;
+        }
+        
+        // Anteprima immagine
+        function previewImage() {
+            const link = document.getElementById('linkImmagine').value;
+            const preview = document.getElementById('imagePreview');
+            
+            if (link) {
+                preview.innerHTML = `<img src="${link}" alt="Anteprima" onload="checkImageDimensions(this)" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'400\' viewBox=\'0 0 400 400\'%3E%3Crect width=\'400\' height=\'400\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'120\' y=\'200\' font-family=\'Arial\' font-size=\'20\' fill=\'%23999\'%3EErrore caricamento%3C/text%3E%3C/svg%3E';">`;
+            } else {
+                preview.innerHTML = `
+                    <div class="placeholder">
+                        <i>🖼️</i>
+                        <p>Nessuna immagine selezionata</p>
+                        <p style="font-size: 0.8em;">Inserisci un link per l'anteprima</p>
+                    </div>
+                `;
+                document.getElementById('dimensionWarning').style.display = 'none';
+            }
+        }
+        
+        // Aggiorna info file
+        function aggiornaInfoFile(componente) {
+            const infoDiv = document.getElementById('fileInfo');
+            if (componente) {
+                infoDiv.innerHTML = `
+                    <p><strong>File:</strong> <span>${componente.nomeFile}</span></p>
+                    <p><strong>Formato:</strong> <span class="format-badge ${componente.formato}">${componente.formato}</span></p>
+                    <p><strong>Tipo:</strong> <span>${componente.tipoComponente || '-'}</span></p>
+                    <p><strong>Percorso:</strong> <span>${componente.percorsoArchivio || '-'}</span></p>
+                `;
+            } else {
+                infoDiv.innerHTML = `
+                    <p><strong>File:</strong> <span>-</span></p>
+                    <p><strong>Formato:</strong> <span>-</span></p>
+                    <p><strong>Tipo:</strong> <span>-</span></p>
+                    <p><strong>Percorso:</strong> <span>-</span></p>
+                `;
+            }
+        }
+        
+        // Aggiungi/modifica record
+        function aggiungiRecord() {
+            const nomeFile = document.getElementById('nomeFile').value.trim();
+            const descrizione = document.getElementById('descrizione').value.trim();
+            const tipoComponente = document.getElementById('tipoComponente').value.trim();
+            const formato = document.getElementById('formato').value;
+            const linkImmagine = document.getElementById('linkImmagine').value.trim();
+            const percorsoArchivio = document.getElementById('percorsoArchivio').value.trim();
+            
+            if (!nomeFile || !descrizione || !formato) {
+                alert('Per favore, compila tutti i campi obbligatori (Nome File, Descrizione e Formato)');
+                return;
+            }
+            
+            const nuovoComponente = {
+                nomeFile,
+                descrizione,
+                tipoComponente,
+                formato,
+                linkImmagine,
+                percorsoArchivio,
+                dataInserimento: new Date().toISOString()
+            };
+            
+            if (recordInModifica !== null) {
+                componenti[recordInModifica] = nuovoComponente;
+                recordInModifica = null;
+                document.querySelector('.btn-primary').innerHTML = '➕ Aggiungi';
+            } else {
+                componenti.push(nuovoComponente);
+            }
+            
+            salvaNelStorage();
+            aggiornaTabella();
+            resetForm();
+        }
+        
+        // Modifica record
+        function modificaRecord(index) {
+            const comp = componenti[index];
+            document.getElementById('nomeFile').value = comp.nomeFile;
+            document.getElementById('descrizione').value = comp.descrizione;
+            document.getElementById('tipoComponente').value = comp.tipoComponente || '';
+            document.getElementById('formato').value = comp.formato;
+            document.getElementById('linkImmagine').value = comp.linkImmagine || '';
+            document.getElementById('percorsoArchivio').value = comp.percorsoArchivio || '';
+            
+            document.getElementById('charCounter').textContent = `${comp.descrizione.length}/255`;
+            
+            if (comp.linkImmagine) {
+                previewImage();
+            }
+            
+            recordInModifica = index;
+            document.querySelector('.btn-primary').innerHTML = '✏️ Aggiorna';
+            
+            // Aggiorna anteprima con i dati del componente
+            aggiornaInfoFile(comp);
+        }
+        
+        // Elimina record
+        function eliminaRecord(index) {
+            if (confirm('Sei sicuro di voler eliminare questo componente?')) {
+                componenti.splice(index, 1);
+                salvaNelStorage();
+                aggiornaTabella();
+                
+                if (recordInModifica === index) {
+                    resetForm();
+                }
+            }
+        }
+        
+        // Anteprima dalla tabella
+        function anteprimaDaTabella(index) {
+            const comp = componenti[index];
+            aggiornaInfoFile(comp);
+            
+            if (comp.linkImmagine) {
+                const preview = document.getElementById('imagePreview');
+                preview.innerHTML = `<img src="${comp.linkImmagine}" alt="Anteprima" onload="checkImageDimensions(this)">`;
+            } else {
+                document.getElementById('imagePreview').innerHTML = `
+                    <div class="placeholder">
+                        <i>🖼️</i>
+                        <p>Nessuna immagine disponibile</p>
+                    </div>
+                `;
+                document.getElementById('dimensionWarning').style.display = 'none';
+            }
+        }
+        
+        // Reset form
+        function resetForm() {
+            document.getElementById('nomeFile').value = '';
+            document.getElementById('descrizione').value = '';
+            document.getElementById('tipoComponente').value = '';
+            document.getElementById('formato').value = '';
+            document.getElementById('linkImmagine').value = '';
+            document.getElementById('percorsoArchivio').value = '';
+            document.getElementById('charCounter').textContent = '0/255';
+            
+            document.getElementById('imagePreview').innerHTML = `
+                <div class="placeholder">
+                    <i>🖼️</i>
+                    <p>Nessuna immagine selezionata</p>
+                    <p style="font-size: 0.8em;">Inserisci un link per l'anteprima</p>
+                </div>
+            `;
+            document.getElementById('dimensionWarning').style.display = 'none';
+            
+            aggiornaInfoFile(null);
+            recordInModifica = null;
+            document.querySelector('.btn-primary').innerHTML = '➕ Aggiungi';
+        }
+        
+        // Aggiorna tabella
+        function aggiornaTabella() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            
+            componenti.forEach((comp, index) => {
+                const row = tbody.insertRow();
+                
+                row.innerHTML = `
+                    <td><strong>${comp.nomeFile}</strong></td>
+                    <td class="descrizione-cell" title="${comp.descrizione.replace(/"/g, '&quot;')}">${comp.descrizione}</td>
+                    <td>${comp.tipoComponente || '-'}</td>
+                    <td><span class="format-badge ${comp.formato}">${comp.formato}</span></td>
+                    <td>${comp.linkImmagine ? '✅' : '❌'}</td>
+                    <td class="percorso-cell" title="${comp.percorsoArchivio || ''}">${comp.percorsoArchivio || '-'}</td>
+                    <td class="action-btns">
+                        <button class="action-btn preview-btn" onclick="anteprimaDaTabella(${index})" title="Anteprima">👁️</button>
+                        <button class="action-btn edit-btn" onclick="modificaRecord(${index})" title="Modifica">✏️</button>
+                        <button class="action-btn delete-btn" onclick="eliminaRecord(${index})" title="Elimina">🗑️</button>
+                    </td>
+                `;
+            });
+            
+            aggiornaStatistiche();
+        }
+        
+        // Aggiorna statistiche
+        function aggiornaStatistiche() {
+            document.getElementById('recordStats').textContent = componenti.length;
+        }
+        
+        // Salva su file CSV
+        function salvaSuFile() {
+            if (componenti.length === 0) {
+                alert('Nessun record da salvare!');
+                return;
+            }
+            
+            let csvContent = 'Nome File,Descrizione,Tipo Componente,Formato,Link Immagine,Percorso Archivio,Data Inserimento\n';
+            
+            componenti.forEach(comp => {
+                const riga = [
+                    `"${comp.nomeFile.replace(/"/g, '""')}"`,
+                    `"${comp.descrizione.replace(/"/g, '""')}"`,
+                    `"${(comp.tipoComponente || '').replace(/"/g, '""')}"`,
+                    `"${comp.formato}"`,
+                    `"${(comp.linkImmagine || '').replace(/"/g, '""')}"`,
+                    `"${(comp.percorsoArchivio || '').replace(/"/g, '""')}"`,
+                    `"${comp.dataInserimento || ''}"`
+                ].join(',');
+                csvContent += riga + '\n';
+            });
+            
+            const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.href = url;
+            link.setAttribute('download', 'componenti_cad.csv');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            
+            alert(`File CSV salvato con successo! (${componenti.length} record)`);
+        }
+        
+        // Carica da file CSV
+        function caricaDaFile() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Seleziona un file CSV da caricare!');
+                return;
+            }
+            
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                try {
+                    const testo = e.target.result;
+                    const righe = testo.split('\n');
+                    righe.shift(); // Rimuovi intestazione
+                    
+                    const nuoviComponenti = [];
+                    
+                    righe.forEach(riga => {
+                        if (riga.trim() === '') return;
+                        
+                        const matches = riga.match(/"(.*?)"/g);
+                        if (matches && matches.length >= 4) {
+                            nuoviComponenti.push({
+                                nomeFile: matches[0].replace(/"/g, ''),
+                                descrizione: matches[1].replace(/"/g, ''),
+                                tipoComponente: matches[2] ? matches[2].replace(/"/g, '') : '',
+                                formato: matches[3].replace(/"/g, ''),
+                                linkImmagine: matches[4] ? matches[4].replace(/"/g, '') : '',
+                                percorsoArchivio: matches[5] ? matches[5].replace(/"/g, '') : '',
+                                dataInserimento: matches[6] ? matches[6].replace(/"/g, '') : new Date().toISOString()
+                            });
+                        }
+                    });
+                    
+                    if (nuoviComponenti.length > 0) {
+                        const scelta = confirm(
+                            `Trovati ${nuoviComponenti.length} record validi.\n` +
+                            'Premi OK per SOVRASCRIVERE i dati esistenti,\n' +
+                            'Premi ANNULLA per ACCODARE i nuovi record.'
+                        );
+                        
+                        if (scelta) {
+                            componenti = nuoviComponenti;
+                        } else {
+                            componenti = [...componenti, ...nuoviComponenti];
+                        }
+                        
+                        salvaNelStorage();
+                        aggiornaTabella();
+                        resetForm();
+                        alert(`Caricati ${nuoviComponenti.length} record con successo!`);
+                    } else {
+                        alert('Nessun record valido trovato nel file.');
+                    }
+                    
+                } catch (error) {
+                    alert('Errore nella lettura del file. Assicurati che sia un CSV valido.');
+                    console.error(error);
+                }
+                
+                fileInput.value = '';
+            };
+            
+            reader.readAsText(file, 'UTF-8');
+        }
+        
+        // Inizializza
+        caricaDatiIniziali();
+        aggiornaInfoFile(null);
+    </script>
+</body>
+</html>
