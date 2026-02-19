@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcolo Piastra a Sbalzo · Ingegneria</title>
+    <!-- Google Fonts & Font Awesome per icone e tipografia moderna -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f4f7fc 0%, #e9eef4 100%);
+            font-family: 'Inter', sans-serif;
+            color: #1e293b;
+            line-height: 1.5;
+            padding: 24px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* header moderno con ombra e bordo sottile */
+        header {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 25px -10px rgba(0, 20, 40, 0.2);
+            padding: 20px 28px;
+            border-radius: 40px 40px 24px 24px;
+            margin-bottom: 28px;
+        }
+
+        h1 {
+            font-weight: 700;
+            font-size: 2.2rem;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #0f2b4b, #1e4b6e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        h1 i {
+            background: #1e4b6e;
+            background: linear-gradient(145deg, #2563eb, #1e4b6e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2rem;
+        }
+
+        h2 {
+            font-weight: 600;
+            font-size: 1.5rem;
+            letter-spacing: -0.01em;
+            margin-bottom: 20px;
+            color: #0b2a41;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-left: 6px solid #2563eb;
+            padding-left: 18px;
+        }
+
+        h2 i {
+            color: #2563eb;
+            font-size: 1.6rem;
+        }
+
+        h5 {
+            font-weight: 500;
+            font-size: 1rem;
+            color: #4a5a72;
+        }
+
+        /* griglia principale – allineamento perfetto */
+        #main {
+            display: grid;
+            grid-template-columns: 1fr 1.4fr 1fr;
+            gap: 24px;
+            flex: 1;
+            margin-bottom: 28px;
+            align-items: stretch; /* manteniamo altezza uniforme */
+        }
+
+        /* sidebar comuni – effetto vetro + profondità */
+        #sidebar1, #sidebar2, #main-content {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 20px 35px -12px rgba(0, 25, 45, 0.25),
+                        inset 0 1px 2px rgba(255,255,255,0.8);
+            padding: 24px 22px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        #sidebar1:hover, #sidebar2:hover, #main-content:hover {
+            box-shadow: 0 24px 40px -15px rgba(18, 52, 77, 0.3);
+        }
+
+        /* etichette eleganti - ORA ALLINEATE perfettamente */
+        #sinistro {
+            text-align: right;
+            font-family: 'Inter', sans-serif;
+            width: 100%;
+        }
+
+        #destro {
+            text-align: left;
+            font-family: 'Inter', sans-serif;
+            width: 100%;
+        }
+
+        /* contenitori flessibili per allineamento righe */
+        .row-data {
+            display: flex;
+            align-items: center;
+            min-height: 52px; /* altezza fissa per perfetto allineamento */
+            margin: 4px 0;
+            width: 100%;
+        }
+
+        /* etichetta a destra (colonna sinistra) */
+        .label-right {
+            width: 100%;
+            font-weight: 500;
+            color: #1e405e;
+            font-size: 0.95rem;
+            letter-spacing: -0.01em;
+            white-space: nowrap;
+            padding-right: 10px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* etichetta con icona (opzionale) */
+        .label-right i {
+            color: #2563eb;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        /* raggruppamento input + unità (colonna centrale) */
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .input-group input {
+            flex: 1;
+            min-width: 0; /* per evitare overflow */
+            font-family: 'Inter', monospace;
+            font-size: 0.95rem;
+            padding: 10px 14px;
+            border-radius: 18px;
+            border: 1.5px solid #dde3ed;
+            background: rgba(255,255,255,0.9);
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
+            transition: all 0.2s;
+            font-weight: 500;
+            color: #0b2f4a;
+        }
+
+        .input-group input:focus {
+            border-color: #3b82f6;
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(59,130,246,0.15), inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        /* caselle calcolate (readonly) con stile acquamarina */
+        input[readonly] {
+            background: #d7f0ed !important;
+            border-color: #7fc9c2 !important;
+            color: #0e3d5e;
+            font-weight: 600;
+            cursor: default;
+        }
+
+        /* unità di misura come badge */
+        .unit-badge {
+            background: #dce5f0;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #1d4d7c;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+            border: 1px solid rgba(255,255,255,0.5);
+            min-width: 65px;
+            text-align: center;
+        }
+
+        /* linee divisorie */
+        .divider-light {
+            margin: 20px 0 18px 0;
+            border: none;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #94a3b8, transparent);
+            opacity: 0.25;
+        }
+
+        /* intestazioni piccole */
+        .section-tag {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #577a9e;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        /* immagine sidebar2 - la tua originale */
+        #sidebar2 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        #sidebar2 img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 24px;
+            box-shadow: 0 15px 30px -12px rgba(0, 32, 64, 0.4);
+            border: 3px solid white;
+            transition: 0.2s ease;
+            object-fit: contain;
+        }
+
+        #sidebar2 img:hover {
+            transform: scale(1.01);
+        }
+
+        /* footer elegante */
+        footer {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(8px);
+            border-radius: 50px;
+            padding: 18px 28px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.8);
+            box-shadow: 0 10px 20px -10px rgba(0,30,50,0.15);
+            margin-top: auto;
+        }
+
+        footer h5 {
+            font-weight: 500;
+            color: #2d4d6e;
+        }
+        h3 {
+            color:black;
+        }
+
+        footer i {
+            color: #e11d48;
+            margin: 0 4px;
+        }
+
+        /* badge informativo */
+        .info-badge {
+            background: #e0f2f1;
+            padding: 3px 12px;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: black;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: black;
+        }
+
+        /* responsività */
+        @media (max-width: 1100px) {
+            #main {
+                grid-template-columns: 1fr;
+            }
+            .row-data {
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>
+        <i class="fas fa-cube"></i> 
+        PIASTRA A SBALZO
+        <span class="info-badge" > <i class="fas fa-calculator"> </i></span>- <b style="color: black !important; display: inline-block;">flessione elastica
+    </h1>
+</header>
+
+<div id="main">
+    <!-- SIDEBAR SINISTRA: descrizione dati (etichette allineate a destra) -->
+    <div id="sidebar1">
+        <h2><i class="fas fa-clipboard-list"></i> DATI</h2>
+        <div class="section-tag"><i class="far fa-circle"></i> geometrici & materiale</div>
+        
+        <div id="sinistro">
+            <!-- righe con altezza fissa per allineamento perfetto -->
+            <div class="row-data">
+                <span class="label-right"><i class="fas fa-arrows-alt-h"></i> Lunghezza [l]:</span>
+            </div>
+            <div class="row-data">
+                <span class="label-right"><i class="fas fa-arrows-alt-v"></i> Larghezza [w]:</span>
+            </div>
+            <div class="row-data">
+                <span class="label-right"><i class="fas fa-cube"></i> Spessore [t]:</span>
+            </div>
+            <div class="row-data">
+                <span class="label-right"><i class="fas fa-microscope"></i> Modulo Young [E]:</span>
+            </div>
+            <div class="row-data">
+                <span class="label-right"><i class="fas fa-weight-hanging"></i> Forza [F]:</span>
+            </div>
+
+            <hr class="divider-light">
+
+            <div class="section-tag"><i class="fas fa-chart-line"></i> grandezze calcolate</div>
+
+            <div class="row-data">
+                <span class="label-right"><i class="fas fa-ruler"></i> Distanza y (t/2):</span>
+            </div>
+            <div class="row-data">
+                <span class="label-right"><i class="fas fa-chart-pie"></i> Momento inerzia [I]:</span>
+            </div>
+            <div class="row-data">
+                <span class="label-right"><i class="fas fa-fire"></i> Momento max [M]:</span>
+            </div>
+            <div class="row-data">
+                <span class="label-right"><i class="fas fa-bolt"></i> Tensione σ:</span>
+            </div>
+            <div class="row-data">
+                <span class="label-right"><i class="fas fa-arrow-down"></i> Freccia δ:</span>
+            </div>
+        </div>
+        <hr class="divider-light">
+        <div style="font-size:0.8rem; color:#3f5e7c; text-align:right;">
+            <i class="far fa-lightbulb"></i> unità ingegneria
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT: input e risultati (esattamente allineati con le etichette) -->
+    <div id="main-content">
+        <h2><i class="fas fa-pen-alt"></i> INSERIMENTO</h2>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <span class="info-badge"><i class="fas fa-fill-drip" style="color:#2eccaa;"></i> caselle acquamarina = calcolate</span>
+            <span style="color:#2563eb; font-size:0.8rem;"><i class="fas fa-sync-alt"></i> modifica dati</span>
+        </div>
+
+        <form id="destro" action="#" method="post" name="input">
+            <!-- Lunghezza -->
+            <div class="row-data">
+                <div class="input-group">
+                    <input type="number" name="campo1" value="150" step="any">
+                    <span class="unit-badge">mm</span>
+                </div>
+            </div>
+            <!-- Larghezza -->
+            <div class="row-data">
+                <div class="input-group">
+                    <input type="number" name="campo2" value="100" step="any">
+                    <span class="unit-badge">mm</span>
+                </div>
+            </div>
+            <!-- Spessore -->
+            <div class="row-data">
+                <div class="input-group">
+                    <input type="number" name="campo3" value="10" step="any">
+                    <span class="unit-badge">mm</span>
+                </div>
+            </div>
+            <!-- Modulo Young -->
+            <div class="row-data">
+                <div class="input-group">
+                    <input type="number" name="campo4" value="210000" step="any">
+                    <span class="unit-badge">MPa</span>
+                </div>
+            </div>
+            <!-- Forza -->
+            <div class="row-data">
+                <div class="input-group">
+                    <input type="number" name="campo5" value="2000" step="any">
+                    <span class="unit-badge">N</span>
+                </div>
+            </div>
+
+            <hr class="divider-light">
+
+            <!-- y (t/2) -->
+            <div class="row-data">
+                <div class="input-group">
+                    <input readonly type="text" name="campo6" style="background-color: #d7f0ed;" value="">
+                    <span class="unit-badge">mm</span>
+                </div>
+            </div>
+            <!-- I -->
+            <div class="row-data">
+                <div class="input-group">
+                    <input readonly type="text" name="campo7" style="background-color: #d7f0ed;" value="">
+                    <span class="unit-badge">mm⁴</span>
+                </div>
+            </div>
+            <!-- M -->
+            <div class="row-data">
+                <div class="input-group">
+                    <input readonly type="text" name="campo8" style="background-color: #d7f0ed;" value="">
+                    <span class="unit-badge">Nm</span>
+                </div>
+            </div>
+            <!-- σ -->
+            <div class="row-data">
+                <div class="input-group">
+                    <input readonly type="text" name="campo9" style="background-color: #d7f0ed;" value="">
+                    <span class="unit-badge">kPa</span>
+                </div>
+            </div>
+            <!-- δ -->
+            <div class="row-data">
+                <div class="input-group">
+                    <input readonly type="text" name="campo10" style="background-color: #d7f0ed;" value="">
+                    <span class="unit-badge">mm</span>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- SIDEBAR DESTRA: la tua immagine originale (PiastraIncastro.PNG) -->
+    <div id="sidebar2">
+        <img src="PiastraIncastro.PNG" alt="Piastra a sbalzo - schema incastro" width="360" height="600">
+    </div>
+</div>
+
+<footer>
+    <h5>
+        <i class="far fa-copyright"></i> Made with JavaScript 
+        <i class="fas fa-heart" style="color:#d43f5e;"></i> by Brunetti 2024 
+        
+    </h5>
+</footer>
+
+<script type="text/javascript">
+    (function() {
+        // Riferimenti ai campi
+        let c1, c2, c3, c4, c5, c6, c7, c8, c9, c10;
+
+        // Funzione di aggiornamento (stesse logiche del codice originale, con miglioramenti)
+        function aggiornaTutto() {
+            let l = parseFloat(c1.value) || 0;        // mm
+            let w = parseFloat(c2.value) || 0;        // mm
+            let t = parseFloat(c3.value) || 0;        // mm
+            let E = parseFloat(c4.value) || 0;        // MPa (N/mm²)
+            let F = parseFloat(c5.value) || 0;        // Newton
+
+            // 1) y = t/2
+            let y = t / 2;
+            c6.value = y.toFixed(4);
+
+            // 2) Momento d'inerzia I = (w * t³) / 12   (mm⁴)
+            let I = (w * Math.pow(t, 3)) / 12;
+            c7.value = I.toFixed(4);
+
+            // 3) Momento massimo M = F * (l/1000)  Nm
+            let M = F * (l / 1000);
+            c8.value = M.toFixed(4);
+
+            // 4) Tensione σ (kPa) = (M * 1000 * y) / I * 1000  (M in Nm, y in mm, I in mm⁴)
+            if (I !== 0 && !isNaN(I)) {
+                let sigma_MPa = (M * 1000 * y) / I;    // M_Nm*1000 = Nmm
+                let sigma_kPa = sigma_MPa * 1000;      // kPa
+                c9.value = sigma_kPa.toFixed(4);
+            } else {
+                c9.value = '';
+            }
+
+            // 5) Freccia δ = (F * l³) / (3 * E * I)   δ in mm
+            if (E !== 0 && I !== 0 && !isNaN(E) && !isNaN(I)) {
+                let delta = (F * Math.pow(l, 3)) / (3 * E * I);
+                c10.value = delta.toFixed(6);
+            } else {
+                c10.value = '';
+            }
+
+            // Pulizia NaN
+            if (isNaN(parseFloat(c6.value))) c6.value = '';
+            if (isNaN(parseFloat(c7.value))) c7.value = '';
+            if (isNaN(parseFloat(c8.value))) c8.value = '';
+            if (isNaN(parseFloat(c9.value))) c9.value = '';
+            if (isNaN(parseFloat(c10.value))) c10.value = '';
+        }
+
+        window.onload = function() {
+            let form = document.getElementById("destro");
+            c1 = form.campo1;
+            c2 = form.campo2;
+            c3 = form.campo3;
+            c4 = form.campo4;
+            c5 = form.campo5;
+            c6 = form.campo6;
+            c7 = form.campo7;
+            c8 = form.campo8;
+            c9 = form.campo9;
+            c10 = form.campo10;
+
+            // input event per aggiornamento in tempo reale
+            form.addEventListener("input", function(event) {
+                if (event.target === c1 || event.target === c2 || event.target === c3 || event.target === c4 || event.target === c5) {
+                    aggiornaTutto();
+                }
+            });
+
+            // calcolo iniziale
+            aggiornaTutto();
+        };
+    })();
+</script>
+</body>
+</html>
