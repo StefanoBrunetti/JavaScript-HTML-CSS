@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Materiali CSV</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+        
+        .form-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            border-right: 1px solid #eee;
+        }
+        
+        .data-section {
+            flex: 2;
+            min-width: 500px;
+            padding: 20px;
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            color: #182848;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4b6cb7;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+        
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            border-color: #4b6cb7;
+            outline: none;
+        }
+        
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 25px;
+        }
+        
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: #4b6cb7;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #3a5ca9;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        
+        .btn-warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+        
+        .file-input-container {
+            position: relative;
+            margin-bottom: 15px;
+        }
+        
+        .file-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .file-input-label {
+            display: block;
+            padding: 12px;
+            background-color: #f8f9fa;
+            border: 2px dashed #6c757d;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .file-input-label:hover {
+            background-color: #e9ecef;
+        }
+        
+        .file-name {
+            display: block;
+            margin-top: 5px;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .data-container {
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        thead {
+            background-color: #f8f9fa;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #4b6cb7;
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .actions-cell {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .action-btn {
+            padding: 5px 10px;
+            font-size: 0.85rem;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        
+        .current-row {
+            font-weight: 600;
+            color: #4b6cb7;
+        }
+        
+        .counter {
+            font-size: 1.1rem;
+            color: #182848;
+        }
+        
+        .empty-message {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+            font-style: italic;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+        
+        @media (max-width: 900px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .form-section {
+                border-right: none;
+                border-bottom: 1px solid #eee;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Gestione Materiali CSV</h1>
+            <p class="subtitle">Aggiungi, modifica, elimina e salva record di materiali in formato CSV Brunetti 2K25</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="form-section">
+                <h2 class="section-title">
+                    <i class="fas fa-edit"></i> Inserimento Dati
+                </h2>
+                
+                <form id="materialForm">
+                    <div class="form-group">
+                        <label for="tipo">Tipo (stringa)</label>
+                        <input type="text" id="tipo" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="diametroP">Diametro P (float)</label>
+                        <input type="number" id="diametroP" step="0.01" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="diametroR">Diametro R (float)</label>
+                        <input type="number" id="diametroR" step="0.01" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="lunghezza">Lunghezza (float)</label>
+                        <input type="number" id="lunghezza" step="0.01" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="spessoreP">Spessore P (float)</label>
+                        <input type="number" id="spessoreP" step="0.01" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="spessoreR">Spessore R (float)</label>
+                        <input type="number" id="spessoreR" step="0.01" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="imagePath">Percorso Immagine (stringa)</label>
+                        <input type="text" id="imagePath" placeholder="es: /immagini/materiale.jpg">
+                    </div>
+                    
+                    <div class="button-group">
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-plus"></i> Aggiungi Materiale
+                        </button>
+                        <button type="button" id="clearForm" class="btn-secondary">
+                            <i class="fas fa-eraser"></i> Pulisci
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="file-input-container">
+                    <h2 class="section-title" style="margin-top: 30px;">
+                        <i class="fas fa-file-import"></i> Carica CSV Esistente
+                    </h2>
+                    <label class="file-input-label" for="csvFile">
+                        <i class="fas fa-cloud-upload-alt"></i> Clicca per selezionare un file CSV
+                        <span class="file-name" id="fileName">Nessun file selezionato</span>
+                    </label>
+                    <input type="file" id="csvFile" accept=".csv" class="file-input">
+                </div>
+                
+                <div class="button-group">
+                    <button type="button" id="downloadCSV" class="btn-success">
+                        <i class="fas fa-file-download"></i> Scarica materiale.csv
+                    </button>
+                    <button type="button" id="clearAll" class="btn-danger">
+                        <i class="fas fa-trash-alt"></i> Cancella Tutti i Dati
+                    </button>
+                </div>
+            </div>
+            
+            <div class="data-section">
+                <h2 class="section-title">
+                    <i class="fas fa-table"></i> Dati Materiali
+                </h2>
+                
+                <div class="navigation">
+                    <button id="prevBtn" class="btn-secondary">
+                        <i class="fas fa-chevron-left"></i> Precedente
+                    </button>
+                    <div class="counter">
+                        Righe totali: <span id="totalRows">0</span> | 
+                        Riga corrente: <span id="currentRow" class="current-row">0</span>
+                    </div>
+                    <button id="nextBtn" class="btn-secondary">
+                        Successivo <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                
+                <div class="data-container">
+                    <div id="emptyMessage" class="empty-message">
+                        <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                        <h3>Nessun dato disponibile</h3>
+                        <p>Aggiungi materiali utilizzando il modulo a sinistra o carica un file CSV esistente.</p>
+                    </div>
+                    
+                    <table id="materialsTable" style="display: none;">
+                        <thead>
+                            <tr>
+                                <th>Tipo</th>
+                                <th>Diametro P</th>
+                                <th>Diametro R</th>
+                                <th>Lunghezza</th>
+                                <th>Spessore P</th>
+                                <th>Spessore R</th>
+                                <th>Percorso Immagine</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- I dati verranno inseriti qui dinamicamente -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="navigation">
+                    <button id="firstBtn" class="btn-secondary">
+                        <i class="fas fa-fast-backward"></i> Prima
+                    </button>
+                    <button id="lastBtn" class="btn-secondary">
+                        Ultima <i class="fas fa-fast-forward"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Applicazione per la gestione di materiali in formato CSV. I dati vengono salvati localmente nel browser.</p>
+            <p>I file CSV possono essere esportati e importati per il backup o la condivisione.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Dati iniziali (vuoti)
+        let materials = [];
+        let currentIndex = 0;
+        
+        // Elementi DOM
+        const form = document.getElementById('materialForm');
+        const table = document.getElementById('materialsTable');
+        const tableBody = document.getElementById('tableBody');
+        const emptyMessage = document.getElementById('emptyMessage');
+        const totalRowsSpan = document.getElementById('totalRows');
+        const currentRowSpan = document.getElementById('currentRow');
+        const csvFileInput = document.getElementById('csvFile');
+        const fileNameSpan = document.getElementById('fileName');
+        
+        // Carica i dati dal localStorage se presenti
+        function loadFromStorage() {
+            const savedData = localStorage.getItem('materialsData');
+            if (savedData) {
+                materials = JSON.parse(savedData);
+                updateTable();
+                updateCounter();
+            }
+        }
+        
+        // Salva i dati nel localStorage
+        function saveToStorage() {
+            localStorage.setItem('materialsData', JSON.stringify(materials));
+        }
+        
+        // Aggiorna la tabella con i dati correnti
+        function updateTable() {
+            tableBody.innerHTML = '';
+            
+            if (materials.length === 0) {
+                table.style.display = 'none';
+                emptyMessage.style.display = 'block';
+                return;
+            }
+            
+            table.style.display = 'table';
+            emptyMessage.style.display = 'none';
+            
+            materials.forEach((material, index) => {
+                const row = document.createElement('tr');
+                if (index === currentIndex) {
+                    row.style.backgroundColor = '#e8f0fe';
+                }
+                
+                row.innerHTML = `
+                    <td>${material.tipo}</td>
+                    <td>${material.diametroP}</td>
+                    <td>${material.diametroR}</td>
+                    <td>${material.lunghezza}</td>
+                    <td>${material.spessoreP}</td>
+                    <td>${material.spessoreR}</td>
+                    <td>${material.imagePath || ''}</td>
+                    <td class="actions-cell">
+                        <button class="btn-warning action-btn edit-btn" data-index="${index}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-danger action-btn delete-btn" data-index="${index}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+            
+            // Aggiungi event listener per i pulsanti di modifica e eliminazione
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    editMaterial(index);
+                });
+            });
+            
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    deleteMaterial(index);
+                });
+            });
+        }
+        
+        // Aggiorna il contatore delle righe
+        function updateCounter() {
+            totalRowsSpan.textContent = materials.length;
+            currentRowSpan.textContent = materials.length > 0 ? currentIndex + 1 : 0;
+        }
+        
+        // Aggiunge un nuovo materiale
+        function addMaterial() {
+            const material = {
+                tipo: document.getElementById('tipo').value,
+                diametroP: parseFloat(document.getElementById('diametroP').value),
+                diametroR: parseFloat(document.getElementById('diametroR').value),
+                lunghezza: parseFloat(document.getElementById('lunghezza').value),
+                spessoreP: parseFloat(document.getElementById('spessoreP').value),
+                spessoreR: parseFloat(document.getElementById('spessoreR').value),
+                imagePath: document.getElementById('imagePath').value
+            };
+            
+            materials.push(material);
+            currentIndex = materials.length - 1;
+            
+            saveToStorage();
+            updateTable();
+            updateCounter();
+            form.reset();
+        }
+        
+        // Modifica un materiale esistente
+        function editMaterial(index) {
+            const material = materials[index];
+            
+            document.getElementById('tipo').value = material.tipo;
+            document.getElementById('diametroP').value = material.diametroP;
+            document.getElementById('diametroR').value = material.diametroR;
+            document.getElementById('lunghezza').value = material.lunghezza;
+            document.getElementById('spessoreP').value = material.spessoreP;
+            document.getElementById('spessoreR').value = material.spessoreR;
+            document.getElementById('imagePath').value = material.imagePath || '';
+            
+            currentIndex = index;
+            updateTable();
+            updateCounter();
+            
+            // Modifica il comportamento del form per aggiornare invece di aggiungere
+            form.onsubmit = function(e) {
+                e.preventDefault();
+                
+                materials[index] = {
+                    tipo: document.getElementById('tipo').value,
+                    diametroP: parseFloat(document.getElementById('diametroP').value),
+                    diametroR: parseFloat(document.getElementById('diametroR').value),
+                    lunghezza: parseFloat(document.getElementById('lunghezza').value),
+                    spessoreP: parseFloat(document.getElementById('spessoreP').value),
+                    spessoreR: parseFloat(document.getElementById('spessoreR').value),
+                    imagePath: document.getElementById('imagePath').value
+                };
+                
+                saveToStorage();
+                updateTable();
+                updateCounter();
+                form.reset();
+                
+                // Ripristina il comportamento normale del form
+                form.onsubmit = function(e) {
+                    e.preventDefault();
+                    addMaterial();
+                };
+            };
+        }
+        
+        // Elimina un materiale
+        function deleteMaterial(index) {
+            if (confirm('Sei sicuro di voler eliminare questo materiale?')) {
+                materials.splice(index, 1);
+                
+                if (currentIndex >= materials.length && materials.length > 0) {
+                    currentIndex = materials.length - 1;
+                } else if (materials.length === 0) {
+                    currentIndex = 0;
+                }
+                
+                saveToStorage();
+                updateTable();
+                updateCounter();
+            }
+        }
+        
+        // Genera e scarica il file CSV
+        function downloadCSV() {
+            if (materials.length === 0) {
+                alert('Non ci sono dati da esportare!');
+                return;
+            }
+            
+            // Intestazioni CSV
+            let csvContent = "Tipo,DiametroP,DiametroR,Lunghezza,SpessoreP,SpessoreR,ImagePath\n";
+            
+            // Aggiungi i dati
+            materials.forEach(material => {
+                const row = [
+                    `"${material.tipo}"`,
+                    material.diametroP,
+                    material.diametroR,
+                    material.lunghezza,
+                    material.spessoreP,
+                    material.spessoreR,
+                    `"${material.imagePath || ''}"`
+                ];
+                csvContent += row.join(',') + '\n';
+            });
+            
+            // Crea un blob e un link per il download
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'materiale.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // Carica un file CSV
+        function loadCSV(file) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const content = e.target.result;
+                const rows = content.split('\n');
+                
+                // Pulisci l'array dei materiali
+                materials = [];
+                
+                // Salta la prima riga (intestazioni) e processa i dati
+                for (let i = 1; i < rows.length; i++) {
+                    if (rows[i].trim() === '') continue;
+                    
+                    // Gestione delle virgole all'interno dei campi stringa
+                    const regex = /(".*?"|[^",]+)(?=\s*,|\s*$)/g;
+                    const fields = rows[i].match(regex);
+                    
+                    if (fields && fields.length >= 7) {
+                        // Rimuovi le virgolette dai campi stringa
+                        const tipo = fields[0].replace(/"/g, '').trim();
+                        const diametroP = parseFloat(fields[1]);
+                        const diametroR = parseFloat(fields[2]);
+                        const lunghezza = parseFloat(fields[3]);
+                        const spessoreP = parseFloat(fields[4]);
+                        const spessoreR = parseFloat(fields[5]);
+                        const imagePath = fields[6].replace(/"/g, '').trim();
+                        
+                        materials.push({
+                            tipo,
+                            diametroP: isNaN(diametroP) ? 0 : diametroP,
+                            diametroR: isNaN(diametroR) ? 0 : diametroR,
+                            lunghezza: isNaN(lunghezza) ? 0 : lunghezza,
+                            spessoreP: isNaN(spessoreP) ? 0 : spessoreP,
+                            spessoreR: isNaN(spessoreR) ? 0 : spessoreR,
+                            imagePath
+                        });
+                    }
+                }
+                
+                currentIndex = materials.length > 0 ? 0 : 0;
+                saveToStorage();
+                updateTable();
+                updateCounter();
+                alert(`Caricati ${materials.length} materiali dal file CSV.`);
+            };
+            
+            reader.readAsText(file);
+        }
+        
+        // Pulisce il form
+        function clearForm() {
+            form.reset();
+            // Ripristina il comportamento normale del form
+            form.onsubmit = function(e) {
+                e.preventDefault();
+                addMaterial();
+            };
+        }
+        
+        // Cancella tutti i dati
+        function clearAllData() {
+            if (materials.length === 0) {
+                alert('Non ci sono dati da cancellare!');
+                return;
+            }
+            
+            if (confirm('Sei sicuro di voler cancellare tutti i dati? Questa azione non può essere annullata.')) {
+                materials = [];
+                currentIndex = 0;
+                saveToStorage();
+                updateTable();
+                updateCounter();
+                clearForm();
+            }
+        }
+        
+        // Navigazione tra i record
+        function goToFirst() {
+            if (materials.length > 0) {
+                currentIndex = 0;
+                updateTable();
+                updateCounter();
+            }
+        }
+        
+        function goToLast() {
+            if (materials.length > 0) {
+                currentIndex = materials.length - 1;
+                updateTable();
+                updateCounter();
+            }
+        }
+        
+        function goToPrev() {
+            if (materials.length > 0 && currentIndex > 0) {
+                currentIndex--;
+                updateTable();
+                updateCounter();
+            }
+        }
+        
+        function goToNext() {
+            if (materials.length > 0 && currentIndex < materials.length - 1) {
+                currentIndex++;
+                updateTable();
+                updateCounter();
+            }
+        }
+        
+        // Inizializzazione
+        document.addEventListener('DOMContentLoaded', function() {
+            // Carica i dati salvati
+            loadFromStorage();
+            
+            // Gestione del form
+            form.onsubmit = function(e) {
+                e.preventDefault();
+                addMaterial();
+            };
+            
+            // Pulsanti di navigazione
+            document.getElementById('firstBtn').addEventListener('click', goToFirst);
+            document.getElementById('lastBtn').addEventListener('click', goToLast);
+            document.getElementById('prevBtn').addEventListener('click', goToPrev);
+            document.getElementById('nextBtn').addEventListener('click', goToNext);
+            
+            // Pulsante per pulire il form
+            document.getElementById('clearForm').addEventListener('click', clearForm);
+            
+            // Pulsante per scaricare il CSV
+            document.getElementById('downloadCSV').addEventListener('click', downloadCSV);
+            
+            // Pulsante per cancellare tutti i dati
+            document.getElementById('clearAll').addEventListener('click', clearAllData);
+            
+            // Gestione del caricamento del file CSV
+            csvFileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    fileNameSpan.textContent = file.name;
+                    
+                    // Verifica che sia un file CSV
+                    if (file.type === 'text/csv' || file.name.toLowerCase().endsWith('.csv')) {
+                        loadCSV(file);
+                    } else {
+                        alert('Per favore, seleziona un file CSV valido.');
+                        fileNameSpan.textContent = 'Nessun file selezionato';
+                        csvFileInput.value = '';
+                    }
+                }
+            });
+            
+            // Dati di esempio (da rimuovere in produzione)
+            // Inizializza con alcuni dati di esempio se non ce ne sono
+<!--
+                if (materials.length === 0) {
+                // Commenta questa sezione se non vuoi dati di esempio
+                materials = [
+                    {
+                        tipo: "Acciaio INOX",
+                        diametroP: 10.5,
+                        diametroR: 10.2,
+                        lunghezza: 200.0,
+                        spessoreP: 1.2,
+                        spessoreR: 1.1,
+                        imagePath: "/immagini/acciaio_inox.jpg"
+                    },
+                    {
+                        tipo: "Alluminio",
+                        diametroP: 8.0,
+                        diametroR: 7.9,
+                        lunghezza: 150.0,
+                        spessoreP: 0.8,
+                        spessoreR: 0.75,
+                        imagePath: "/immagini/alluminio.jpg"
+                    },
+                    {
+                        tipo: "Rame",
+                        diametroP: 5.0,
+                        diametroR: 4.9,
+                        lunghezza: 120.0,
+                        spessoreP: 0.5,
+                        spessoreR: 0.45,
+                        imagePath: "/immagini/rame.jpg"
+                    }
+                ];
+                saveToStorage();
+                updateTable();
+                updateCounter();
+            } 
+-->
+        });
+    </script>
+</body>
+</html>
