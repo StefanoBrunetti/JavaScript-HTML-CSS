@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcolatore Punto di Rugiada</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 25px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="number"] {
+            width: calc(100% - 22px); /* Full width minus padding and border */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        p.result {
+            margin-top: 25px;
+            font-size: 1.2em;
+            color: #333;
+            font-weight: bold;
+            min-height: 20px; /* Reserve space for results */
+        }
+        .error {
+            color: red;
+            font-weight: normal;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calcolatore Punto di Rugiada</h1>
+
+        <div class="input-group">
+            <label for="temperatureInput">Temperatura (°C):</label>
+            <input type="number" id="temperatureInput" placeholder="Es: 25">
+        </div>
+
+        <div class="input-group">
+            <label for="humidityInput">Umidità Relativa (%):</label>
+            <input type="number" id="humidityInput" placeholder="Es: 60" min="0" max="100">
+        </div>
+
+        <button onclick="calculateDewPoint()">Calcola Punto di Rugiada</button>
+
+        <p id="dewPointResult" class="result">Punto di Rugiada: </p>
+    </div>
+
+    <script>
+        /**
+         * Calcola il punto di rugiada (dew point) in base alla temperatura e all'umidità relativa.
+         * Utilizza l'approssimazione di Magnus-Tetens.
+         *
+         * @param {number} T - Temperatura in gradi Celsius.
+         * @param {number} RH - Umidità relativa in percentuale (0-100).
+         * @returns {number|null} Il punto di rugiada in gradi Celsius o null se i parametri non sono validi.
+         */
+        function calculateDewPoint() {
+            const temperatureInput = document.getElementById('temperatureInput');
+            const humidityInput = document.getElementById('humidityInput');
+            const dewPointResultElement = document.getElementById('dewPointResult');
+
+            const T = parseFloat(temperatureInput.value); // Temperatura in °C
+            const RH = parseFloat(humidityInput.value);  // Umidità relativa in %
+
+            dewPointResultElement.classList.remove('error'); // Rimuovi stili di errore precedenti
+
+            // Validazione degli input
+            if (isNaN(T) || isNaN(RH)) {
+                dewPointResultElement.textContent = "Punto di Rugiada: Inserisci valori numerici validi per temperatura e umidità.";
+                dewPointResultElement.classList.add('error');
+                return;
+            }
+
+            if (RH < 0 || RH > 100) {
+                dewPointResultElement.textContent = "Punto di Rugiada: L'umidità relativa deve essere tra 0 e 100%.";
+                dewPointResultElement.classList.add('error');
+                return;
+            }
+
+            // Coefficienti per la formula di Magnus-Tetens
+            const b = 17.67;
+            const c = 243.5; // in °C
+
+            // Calcolo del parametro gamma
+            const gamma = Math.log(RH / 100) + (b * T) / (c + T);
+
+            // Calcolo del punto di rugiada
+            const Tdp = (c * gamma) / (b - gamma);
+
+            dewPointResultElement.textContent = `Punto di Rugiada: ${Tdp.toFixed(2)} °C`;
+        }
+    </script>
+</body>
+</html>
