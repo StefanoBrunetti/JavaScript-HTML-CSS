@@ -1,0 +1,281 @@
+# -*- coding: utf-8 -*-
+"""
+Macro per FreeCAD: Esporta Assieme in PNG HD
+Richiede: PySide2 
+Autore	: Brunetti 2026
+Versione: 1.0
+"""
+
+import FreeCAD
+import FreeCADGui
+from PySide import QtGui, QtCore
+import os
+from datetime import datetime
+
+class ExportImageDialog:
+    def __init__(self):
+        self.form = QtGui.QWidget()
+        self.form.setWindowTitle("Esporta Assieme in PNG HD")
+        self.form.setMinimumWidth(450)
+        
+        # Layout principale
+        layout = QtGui.QVBoxLayout(self.form)
+        
+        # Gruppo impostazioni file
+        file_group = QtGui.QGroupBox("Impostazioni File")
+        file_layout = QtGui.QGridLayout()
+        
+        # Nome file
+        file_layout.addWidget(QtGui.QLabel("Nome file:"), 0, 0)
+        self.file_name = QtGui.QLineEdit()
+        self.file_name.setPlaceholderText("nome_assieme")
+        self.file_name.setText(self.get_document_name())
+        file_layout.addWidget(self.file_name, 0, 1, 1, 2)
+        
+        # Cartella di destinazione
+        file_layout.addWidget(QtGui.QLabel("Cartella:"), 1, 0)
+        self.folder_path = QtGui.QLineEdit()
+        self.folder_path.setText(os.path.expanduser("~"))
+        file_layout.addWidget(self.folder_path, 1, 1)
+        
+        self.browse_btn = QtGui.QPushButton("Sfoglia...")
+        self.browse_btn.clicked.connect(self.browse_folder)
+        file_layout.addWidget(self.browse_btn, 1, 2)
+        
+        file_group.setLayout(file_layout)
+        layout.addWidget(file_group)
+        
+        # Gruppo impostazioni immagine
+        image_group = QtGui.QGroupBox("Impostazioni HD")
+        image_layout = QtGui.QGridLayout()
+        
+        # Larghezza
+        image_layout.addWidget(QtGui.QLabel("Larghezza pixel:"), 0, 0)
+        self.width_spin = QtGui.QSpinBox()
+        self.width_spin.setRange(100, 7680)
+        self.width_spin.setValue(1080)
+        self.width_spin.setSingleStep(100)
+        image_layout.addWidget(self.width_spin, 0, 1)
+        
+        # Altezza
+        image_layout.addWidget(QtGui.QLabel("Altezza pixel:"), 1, 0)
+        self.height_spin = QtGui.QSpinBox()
+        self.height_spin.setRange(100, 4320)
+        self.height_spin.setValue(1080)
+        self.height_spin.setSingleStep(100)
+        image_layout.addWidget(self.height_spin, 1, 1)
+        
+        # Qualità (per JPEG, ma lo usiamo come riferimento)
+        image_layout.addWidget(QtGui.QLabel("Qualità:"), 2, 0)
+        self.quality_spin = QtGui.QSpinBox()
+        self.quality_spin.setRange(1, 100)
+        self.quality_spin.setValue(95)
+        self.quality_spin.setSuffix("%")
+        image_layout.addWidget(self.quality_spin, 2, 1)
+        
+        image_group.setLayout(image_layout)
+        layout.addWidget(image_group)
+        
+        # Gruppo impostazioni vista
+        view_group = QtGui.QGroupBox("Impostazioni Vista")
+        view_layout = QtGui.QGridLayout()
+        
+        # Tipo di vista
+        view_layout.addWidget(QtGui.QLabel("Tipo vista:"), 0, 0)
+        self.view_combo = QtGui.QComboBox()
+        views = ["Vista corrente", "Assonometrica", "Frontale", "Posteriore", 
+                "Dall'alto", "Dal basso", "Sinistra", "Destra"]
+        self.view_combo.addItems(views)
+        view_layout.addWidget(self.view_combo, 0, 1)
+        
+        # Opzioni
+        self.transparent_bg = QtGui.QCheckBox("Sfondo trasparente")
+        view_layout.addWidget(self.transparent_bg, 1, 0, 1, 2)
+        
+        view_group.setLayout(view_layout)
+        layout.addWidget(view_group)
+        
+        # Pulsanti
+        button_layout = QtGui.QHBoxLayout()
+        
+        self.export_btn = QtGui.QPushButton("Esporta PNG")
+        self.export_btn.clicked.connect(self.export_image)
+        self.export_btn.setDefault(True)
+        self.export_btn.setStyleSheet("background-color: #4CAF50; color: white; font-weight: bold;")
+        button_layout.addWidget(self.export_btn)
+        
+        self.cancel_btn = QtGui.QPushButton("Annulla")
+        self.cancel_btn.clicked.connect(self.form.close)
+        self.cancel_btn.setStyleSheet("background-color: #f44336; color: white;")
+        button_layout.addWidget(self.cancel_btn)
+        
+        layout.addLayout(button_layout)
+        
+        # Aggiungi margini e spaziature
+        layout.setSpacing(10)
+        layout.setContentsMargins(10, 10, 10, 10)
+        
+    def get_document_name(self):
+        """Ottieni il nome del documento corrente"""
+        if FreeCAD.ActiveDocument:
+            return FreeCAD.ActiveDocument.Label.replace(" ", "_")
+        return "nuovo_assieme"
+        
+    def browse_folder(self):
+        folder = QtGui.QFileDialog.getExistingDirectory(
+            self.form, 
+            "Seleziona cartella di destinazione",
+            self.folder_path.text()
+        )
+        if folder:
+            self.folder_path.setText(folder)
+    
+    def apply_view(self):
+        """Applica la vista selezionata"""
+        if not FreeCAD.ActiveDocument:
+            return
+        
+        view = FreeCADGui.ActiveDocument.ActiveView
+        view_index = self.view_combo.currentIndex()
+        
+        # Salva la vista corrente se necessario
+        if view_index == 0:  # Vista corrente
+            return
+        elif view_index == 1:  # Assonometrica
+            view.viewAxonometric()
+        elif view_index == 2:  # Frontale
+            view.viewFront()
+        elif view_index == 3:  # Posteriore
+            view.viewRear()
+        elif view_index == 4:  # Dall'alto
+            view.viewTop()
+        elif view_index == 5:  # Dal basso
+            view.viewBottom()
+        elif view_index == 6:  # Sinistra
+            view.viewLeft()
+        elif view_index == 7:  # Destra
+            view.viewRight()
+    
+    def export_image(self):
+        """Esporta l'immagine PNG"""
+        if not FreeCAD.ActiveDocument:
+            QtGui.QMessageBox.warning(self.form, "Errore", "Nessun documento aperto!")
+            return
+        
+        # Verifica nome file
+        if not self.file_name.text().strip():
+            QtGui.QMessageBox.warning(self.form, "Errore", "Inserisci un nome per il file!")
+            return
+        
+        # Applica la vista selezionata
+        self.apply_view()
+        
+        # Prepara nome file
+        filename = self.file_name.text().strip()
+        # Rimuovi eventuale estensione esistente
+        if filename.lower().endswith('.png'):
+            filename = filename[:-4]
+        
+        # Aggiungi estensione .png se non presente
+        full_path = os.path.join(self.folder_path.text(), filename + ".png")
+        
+        try:
+            view = FreeCADGui.ActiveDocument.ActiveView
+            
+            # Ottieni dimensioni
+            width = self.width_spin.value()
+            height = self.height_spin.value()
+            
+            # Per FreeCAD 0.19 e versioni successive
+            # La funzione saveImage accetta: saveImage(path, width, height, bgColor)
+            
+            # Gestione sfondo
+            if self.transparent_bg.isChecked():
+                # Per sfondo trasparente (RGBA)
+                bgColor = (0, 0, 0, 0)  # Nero trasparente
+            else:
+                # Sfondo normale (usa colore corrente)
+                bgColor = None  # Usa colore di default di FreeCAD
+            
+            # Salva l'immagine
+            view.saveImage(full_path, width, height, bgColor)
+            
+            # Verifica se il file è stato creato
+            if os.path.exists(full_path):
+                file_size = os.path.getsize(full_path) / 1024  # KB
+                
+                QtGui.QMessageBox.information(
+                    self.form,
+                    "Esportazione completata",
+                    f"✅ Immagine salvata con successo!\n\n"
+                    f"📁 File: {full_path}\n"
+                    f"📏 Risoluzione: {width}x{height}\n"
+                    f"📦 Dimensione: {file_size:.1f} KB"
+                )
+                
+                # Chiedi se aprire la cartella
+                reply = QtGui.QMessageBox.question(
+                    self.form,
+                    "Apri cartella",
+                    "Vuoi aprire la cartella contenente il file?",
+                    QtGui.QMessageBox.Yes | QtGui.QMessageBox.No
+                )
+                
+                if reply == QtGui.QMessageBox.Yes:
+                    self.open_folder(self.folder_path.text())
+                
+                self.form.close()
+            else:
+                QtGui.QMessageBox.warning(
+                    self.form,
+                    "Attenzione",
+                    "Il file potrebbe non essere stato salvato correttamente."
+                )
+            
+        except Exception as e:
+            # Metodo alternativo per versioni diverse di FreeCAD
+            try:
+                # Prova con parametri diversi
+                view.saveImage(full_path, width, height)
+                QtGui.QMessageBox.information(self.form, "Successo", f"Immagine salvata in:\n{full_path}")
+                self.form.close()
+            except:
+                QtGui.QMessageBox.critical(
+                    self.form,
+                    "Errore",
+                    f"Errore durante l'esportazione:\n{str(e)}\n\n"
+                    "Verifica di avere una vista 3D attiva."
+                )
+    
+    def open_folder(self, path):
+        """Apri la cartella nel file explorer"""
+        import subprocess
+        import platform
+        
+        try:
+            if platform.system() == "Windows":
+                os.startfile(path)
+            elif platform.system() == "Darwin":  # macOS
+                subprocess.Popen(["open", path])
+            else:  # Linux
+                subprocess.Popen(["xdg-open", path])
+        except:
+            pass  # Ignora errori nell'apertura della cartella
+    
+    def show(self):
+        """Mostra il dialog"""
+        self.form.show()
+
+# Avvia la macro
+if __name__ == "__main__":
+    # Controlla se FreeCAD è in modalità GUI
+    if not FreeCAD.GuiUp:
+        QtGui.QMessageBox.critical(
+            None,
+            "Errore",
+            "Questa macro richiede l'interfaccia grafica di FreeCAD!\n"
+            "Avvia FreeCAD in modalità GUI e riprova."
+        )
+    else:
+        dialog = ExportImageDialog()
+        dialog.show()
