@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Profili Serie H</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --border-color: #bdc3c7;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 25px 0;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            border-radius: 0 0 10px 10px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+        
+        .app-version {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-title i {
+            color: var(--secondary-color);
+        }
+        
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 18px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 0.95rem;
+        }
+        
+        .unit {
+            font-weight: normal;
+            color: #7f8c8d;
+            font-size: 0.85rem;
+        }
+        
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #219653;
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+            transform: translateY(-2px);
+        }
+        
+        /* Table Styling */
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: left;
+            padding: 15px;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+        
+        td {
+            padding: 15px;
+            border-bottom: 1px solid var(--light-color);
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        tr.selected {
+            background-color: #e3f2fd;
+        }
+        
+        .table-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background-color 0.2s;
+        }
+        
+        .edit-btn {
+            background-color: #f0f8ff;
+            color: var(--secondary-color);
+        }
+        
+        .edit-btn:hover {
+            background-color: #e1f0fa;
+        }
+        
+        .delete-btn {
+            background-color: #fef2f2;
+            color: var(--accent-color);
+        }
+        
+        .delete-btn:hover {
+            background-color: #fee2e2;
+        }
+        
+        /* Navigation Controls */
+        .nav-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .search-box {
+            position: relative;
+            width: 300px;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px 12px 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7f8c8d;
+        }
+        
+        .pagination {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .page-info {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .nav-btn {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .nav-btn:hover:not(:disabled) {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* File Operations */
+        .file-ops {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-body {
+            padding: 25px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 6px;
+            color: white;
+            font-weight: 600;
+            box-shadow: var(--shadow);
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.3s, opacity 0.3s;
+        }
+        
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .notification-success {
+            background-color: var(--success-color);
+        }
+        
+        .notification-error {
+            background-color: var(--accent-color);
+        }
+        
+        .notification-info {
+            background-color: var(--secondary-color);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--light-color);
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .nav-controls {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+            
+            .button-group {
+                justify-content: center;
+            }
+            
+            .btn {
+                flex: 1;
+                min-width: 140px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div>
+                    <h1><i class="fas fa-shapes"></i> Gestione Profili Serie H</h1>
+                    <p class="subtitle">IPE, HEA, HEB, HEM - Caratteristiche geometriche e meccaniche</p>
+                </div>
+                <div class="app-version">Brunetti 2025 v2.0</div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="main-content">
+            <!-- Form Section -->
+            <div>
+                <div class="card">
+                    <h2 class="card-title"><i class="fas fa-edit"></i> Dati Profilo</h2>
+                    
+                    <form id="profileForm">
+                        <div class="form-group">
+                            <label for="designazione">Designazione <span class="unit">(es: IPE200, HEA200)</span></label>
+                            <input type="text" id="designazione" required>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="h">Altezza (h) <span class="unit">[mm]</span></label>
+                                <input type="number" id="h" step="0.1" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="b">Larghezza ali (b) <span class="unit">[mm]</span></label>
+                                <input type="number" id="b" step="0.1" min="0" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="a">Spessore anima (a) <span class="unit">[mm]</span></label>
+                                <input type="number" id="a" step="0.01" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="e">Spessore ali (e) <span class="unit">[mm]</span></label>
+                                <input type="number" id="e" step="0.01" min="0" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="r">Raggio raccordo (r) <span class="unit">[mm]</span></label>
+                                <input type="number" id="r" step="0.1" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="sezione">Area sezione <span class="unit">[cm²]</span></label>
+                                <input type="number" id="sezione" step="0.01" min="0" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="peso">Peso <span class="unit">[kg/m]</span></label>
+                                <input type="number" id="peso" step="0.01" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="jx">Mom. inerzia Jx <span class="unit">[cm⁴]</span></label>
+                                <input type="number" id="jx" step="0.1" min="0" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="jy">Mom. inerzia Jy <span class="unit">[cm⁴]</span></label>
+                                <input type="number" id="jy" step="0.1" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="wx">Mod. resistenza Wx <span class="unit">[cm³]</span></label>
+                                <input type="number" id="wx" step="0.1" min="0" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="wy">Mod. resistenza Wy <span class="unit">[cm³]</span></label>
+                                <input type="number" id="wy" step="0.1" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ix">Raggio inerzia ix <span class="unit">[cm]</span></label>
+                                <input type="number" id="ix" step="0.01" min="0" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="iy">Raggio inerzia iy <span class="unit">[cm]</span></label>
+                            <input type="number" id="iy" step="0.01" min="0" required>
+                        </div>
+                        
+                        <div class="button-group">
+                            <button type="button" id="btnNuovo" class="btn btn-secondary">
+                                <i class="fas fa-file"></i> Nuovo
+                            </button>
+                            <button type="button" id="btnCalcola" class="btn btn-secondary">
+                                <i class="fas fa-calculator"></i> Calcola
+                            </button>
+                            <button type="submit" id="btnSalva" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Salva
+                            </button>
+                            <button type="button" id="btnElimina" class="btn btn-danger">
+                                <i class="fas fa-trash"></i> Elimina
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="card">
+                    <h2 class="card-title"><i class="fas fa-chart-bar"></i> Statistiche</h2>
+                    <div class="stats" id="statsContainer">
+                        <!-- Le statistiche saranno caricate qui dinamicamente -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Table & Controls Section -->
+            <div>
+                <div class="card">
+                    <h2 class="card-title"><i class="fas fa-list"></i> Elenco Profili</h2>
+                    
+                    <div class="nav-controls">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInput" placeholder="Cerca per designazione...">
+                        </div>
+                        
+                        <div class="pagination">
+                            <button class="nav-btn" id="btnPrimo" title="Primo profilo">
+                                <i class="fas fa-fast-backward"></i>
+                            </button>
+                            <button class="nav-btn" id="btnPrecedente" title="Profilo precedente">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <span class="page-info" id="pageInfo">0/0</span>
+                            <button class="nav-btn" id="btnSuccessivo" title="Profilo successivo">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                            <button class="nav-btn" id="btnUltimo" title="Ultimo profilo">
+                                <i class="fas fa-fast-forward"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table id="profilesTable">
+                            <thead>
+                                <tr>
+                                    <th>Profilo</th>
+                                    <th>h [mm]</th>
+                                    <th>b [mm]</th>
+                                    <th>Sez. [cm²]</th>
+                                    <th>Peso [kg/m]</th>
+                                    <th>Jx [cm⁴]</th>
+                                    <th>Azioni</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                                <!-- Le righe saranno caricate qui dinamicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="file-ops">
+                        <button id="btnCaricaCSV" class="btn btn-secondary">
+                            <i class="fas fa-file-import"></i> Carica CSV
+                        </button>
+                        <button id="btnSalvaCSV" class="btn btn-success">
+                            <i class="fas fa-file-export"></i> Salva CSV
+                        </button>
+                        <button id="btnEsportaExcel" class="btn btn-success">
+                            <i class="fas fa-file-excel"></i> Esporta Excel
+                        </button>
+                        <button id="btnDettaglio" class="btn btn-secondary">
+                            <i class="fas fa-info-circle"></i> Dettaglio
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2 class="card-title"><i class="fas fa-database"></i> Operazioni File</h2>
+                    <div class="file-ops">
+                        <button id="btnSalvaLocale" class="btn btn-primary">
+                            <i class="fas fa-hdd"></i> Salva in Browser
+                        </button>
+                        <button id="btnCaricaLocale" class="btn btn-secondary">
+                            <i class="fas fa-download"></i> Carica da Browser
+                        </button>
+                        <button id="btnAzzera" class="btn btn-danger">
+                            <i class="fas fa-eraser"></i> Azzera Dati
+                        </button>
+                        <button id="btnEsempio" class="btn btn-secondary">
+                            <i class="fas fa-magic"></i> Carica Esempio
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal per dettaglio profilo -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Dettaglio Profilo</h3>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Il contenuto dettagliato sarà inserito qui -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText">Operazione completata!</span>
+    </div>
+    
+    <footer class="container">
+        <p>Gestione Profili Serie H &copy; 2025 - Applicazione sviluppata in HTML/CSS/JavaScript</p>
+        <p>Dati salvati localmente nel browser | Compatibile con Chrome, Firefox, Edge Brunetti 2025</p>
+    </footer>
+
+    <script>
+        // Applicazione principale
+        class ProfiliHManager {
+            constructor() {
+                this.profili = [];
+                this.currentIndex = -1;
+                this.filteredProfili = [];
+                this.searchTerm = '';
+                this.storageKey = 'profiliHData';
+                
+                this.initialize();
+                this.loadFromLocalStorage();
+                this.updateUI();
+            }
+            
+            initialize() {
+                // Riferimenti agli elementi del DOM
+                this.form = document.getElementById('profileForm');
+                this.tableBody = document.getElementById('tableBody');
+                this.searchInput = document.getElementById('searchInput');
+                
+                // Pulsanti del form
+                this.btnNuovo = document.getElementById('btnNuovo');
+                this.btnCalcola = document.getElementById('btnCalcola');
+                this.btnSalva = document.getElementById('btnSalva');
+                this.btnElimina = document.getElementById('btnElimina');
+                
+                // Pulsanti navigazione
+                this.btnPrimo = document.getElementById('btnPrimo');
+                this.btnPrecedente = document.getElementById('btnPrecedente');
+                this.btnSuccessivo = document.getElementById('btnSuccessivo');
+                this.btnUltimo = document.getElementById('btnUltimo');
+                this.pageInfo = document.getElementById('pageInfo');
+                
+                // Pulsanti file
+                this.btnCaricaCSV = document.getElementById('btnCaricaCSV');
+                this.btnSalvaCSV = document.getElementById('btnSalvaCSV');
+                this.btnEsportaExcel = document.getElementById('btnEsportaExcel');
+                this.btnDettaglio = document.getElementById('btnDettaglio');
+                this.btnSalvaLocale = document.getElementById('btnSalvaLocale');
+                this.btnCaricaLocale = document.getElementById('btnCaricaLocale');
+                this.btnAzzera = document.getElementById('btnAzzera');
+                this.btnEsempio = document.getElementById('btnEsempio');
+                
+                // Modal
+                this.detailModal = document.getElementById('detailModal');
+                this.modalTitle = document.getElementById('modalTitle');
+                this.modalBody = document.getElementById('modalBody');
+                this.closeModal = document.getElementById('closeModal');
+                
+                // Notification
+                this.notification = document.getElementById('notification');
+                this.notificationText = document.getElementById('notificationText');
+                
+                // Setup event listeners
+                this.setupEventListeners();
+            }
+            
+            setupEventListeners() {
+                // Form submit
+                this.form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.saveProfile();
+                });
+                
+                // Pulsanti form
+                this.btnNuovo.addEventListener('click', () => this.newProfile());
+                this.btnCalcola.addEventListener('click', () => this.calculateProperties());
+                this.btnElimina.addEventListener('click', () => this.deleteProfile());
+                
+                // Navigazione
+                this.btnPrimo.addEventListener('click', () => this.firstProfile());
+                this.btnPrecedente.addEventListener('click', () => this.previousProfile());
+                this.btnSuccessivo.addEventListener('click', () => this.nextProfile());
+                this.btnUltimo.addEventListener('click', () => this.lastProfile());
+                
+                // Ricerca
+                this.searchInput.addEventListener('input', () => {
+                    this.searchTerm = this.searchInput.value.trim().toUpperCase();
+                    this.updateUI();
+                });
+                
+                // File operations
+                this.btnCaricaCSV.addEventListener('click', () => this.loadCSV());
+                this.btnSalvaCSV.addEventListener('click', () => this.saveCSV());
+                this.btnEsportaExcel.addEventListener('click', () => this.exportExcel());
+                this.btnDettaglio.addEventListener('click', () => this.showDetail());
+                this.btnSalvaLocale.addEventListener('click', () => this.saveToLocalStorage());
+                this.btnCaricaLocale.addEventListener('click', () => this.loadFromLocalStorage());
+                this.btnAzzera.addEventListener('click', () => this.clearData());
+                this.btnEsempio.addEventListener('click', () => this.loadExampleData());
+                
+                // Modal
+                this.closeModal.addEventListener('click', () => this.hideModal());
+                
+                // Click fuori dal modal per chiuderlo
+                window.addEventListener('click', (e) => {
+                    if (e.target === this.detailModal) {
+                        this.hideModal();
+                    }
+                });
+            }
+            
+            // ========== GESTIONE PROFILI ==========
+            
+            getFormData() {
+                return {
+                    Designazione: document.getElementById('designazione').value.trim(),
+                    h: parseFloat(document.getElementById('h').value) || 0,
+                    b: parseFloat(document.getElementById('b').value) || 0,
+                    a: parseFloat(document.getElementById('a').value) || 0,
+                    e: parseFloat(document.getElementById('e').value) || 0,
+                    r: parseFloat(document.getElementById('r').value) || 0,
+                    Sezione: parseFloat(document.getElementById('sezione').value) || 0,
+                    Peso: parseFloat(document.getElementById('peso').value) || 0,
+                    Jx: parseFloat(document.getElementById('jx').value) || 0,
+                    Jy: parseFloat(document.getElementById('jy').value) || 0,
+                    Wx: parseFloat(document.getElementById('wx').value) || 0,
+                    Wy: parseFloat(document.getElementById('wy').value) || 0,
+                    ix: parseFloat(document.getElementById('ix').value) || 0,
+                    iy: parseFloat(document.getElementById('iy').value) || 0
+                };
+            }
+            
+            setFormData(profilo) {
+                document.getElementById('designazione').value = profilo.Designazione || '';
+                document.getElementById('h').value = profilo.h || 0;
+                document.getElementById('b').value = profilo.b || 0;
+                document.getElementById('a').value = profilo.a || 0;
+                document.getElementById('e').value = profilo.e || 0;
+                document.getElementById('r').value = profilo.r || 0;
+                document.getElementById('sezione').value = profilo.Sezione || 0;
+                document.getElementById('peso').value = profilo.Peso || 0;
+                document.getElementById('jx').value = profilo.Jx || 0;
+                document.getElementById('jy').value = profilo.Jy || 0;
+                document.getElementById('wx').value = profilo.Wx || 0;
+                document.getElementById('wy').value = profilo.Wy || 0;
+                document.getElementById('ix').value = profilo.ix || 0;
+                document.getElementById('iy').value = profilo.iy || 0;
+            }
+            
+            newProfile() {
+                this.currentIndex = -1;
+                this.setFormData({});
+                this.updateUI();
+                this.showNotification('Pronto per nuovo inserimento', 'info');
+            }
+            
+            saveProfile() {
+                const profilo = this.getFormData();
+                
+                if (!profilo.Designazione) {
+                    this.showNotification('La designazione è obbligatoria!', 'error');
+                    return;
+                }
+                
+                // Controlla se il profilo esiste già
+                const existingIndex = this.profili.findIndex(p => 
+                    p.Designazione.toUpperCase() === profilo.Designazione.toUpperCase()
+                );
+                
+                if (existingIndex >= 0 && existingIndex !== this.currentIndex) {
+                    if (!confirm(`Il profilo ${profilo.Designazione} esiste già. Sovrascrivere?`)) {
+                        return;
+                    }
+                    this.currentIndex = existingIndex;
+                }
+                
+                if (this.currentIndex >= 0) {
+                    // Modifica profilo esistente
+                    this.profili[this.currentIndex] = profilo;
+                    this.showNotification(`Profilo ${profilo.Designazione} aggiornato`, 'success');
+                } else {
+                    // Nuovo profilo
+                    this.profili.push(profilo);
+                    this.currentIndex = this.profili.length - 1;
+                    this.showNotification(`Profilo ${profilo.Designazione} aggiunto`, 'success');
+                }
+                
+                this.saveToLocalStorage();
+                this.updateUI();
+            }
+            
+            deleteProfile() {
+                if (this.currentIndex < 0 || this.currentIndex >= this.profili.length) {
+                    this.showNotification('Nessun profilo selezionato!', 'error');
+                    return;
+                }
+                
+                const profilo = this.profili[this.currentIndex];
+                
+                if (confirm(`Eliminare il profilo ${profilo.Designazione}?`)) {
+                    this.profili.splice(this.currentIndex, 1);
+                    
+                    if (this.profili.length > 0) {
+                        this.currentIndex = Math.min(this.currentIndex, this.profili.length - 1);
+                        this.setFormData(this.profili[this.currentIndex]);
+                    } else {
+                        this.currentIndex = -1;
+                        this.newProfile();
+                    }
+                    
+                    this.saveToLocalStorage();
+                    this.updateUI();
+                    this.showNotification(`Profilo ${profilo.Designazione} eliminato`, 'success');
+                }
+            }
+            
+            calculateProperties() {
+                // Calcola automaticamente alcune proprietà geometriche
+                try {
+                    const h = parseFloat(document.getElementById('h').value) || 0;
+                    const b = parseFloat(document.getElementById('b').value) || 0;
+                    const a = parseFloat(document.getElementById('a').value) || 0;
+                    const e = parseFloat(document.getElementById('e').value) || 0;
+                    
+                    if (h > 0 && b > 0 && a > 0 && e > 0) {
+                        // Calcoli semplificati (da implementare con formule corrette)
+                        const area = (b * e * 2) + (a * (h - 2 * e)); // mm²
+                        const areaCm2 = area / 100; // converti in cm²
+                        
+                        const peso = areaCm2 * 0.785; // kg/m (approssimato)
+                        
+                        // Momenti d'inerzia approssimati
+                        const jx = (b * Math.pow(h, 3) - (b - a) * Math.pow(h - 2*e, 3)) / 12; // mm⁴
+                        const jxCm4 = jx / 10000; // converti in cm⁴
+                        
+                        const jy = (2 * e * Math.pow(b, 3) + (h - 2*e) * Math.pow(a, 3)) / 12; // mm⁴
+                        const jyCm4 = jy / 10000; // converti in cm⁴
+                        
+                        // Moduli di resistenza
+                        const wx = (2 * jxCm4) / h * 10; // cm³ (approssimato)
+                        const wy = (2 * jyCm4) / b * 10; // cm³ (approssimato)
+                        
+                        // Raggi di inerzia
+                        const ix = Math.sqrt(jxCm4 / areaCm2);
+                        const iy = Math.sqrt(jyCm4 / areaCm2);
+                        
+                        // Aggiorna i campi
+                        document.getElementById('sezione').value = areaCm2.toFixed(2);
+                        document.getElementById('peso').value = peso.toFixed(2);
+                        document.getElementById('jx').value = jxCm4.toFixed(1);
+                        document.getElementById('jy').value = jyCm4.toFixed(1);
+                        document.getElementById('wx').value = wx.toFixed(1);
+                        document.getElementById('wy').value = wy.toFixed(1);
+                        document.getElementById('ix').value = ix.toFixed(2);
+                        document.getElementById('iy').value = iy.toFixed(2);
+                        
+                        this.showNotification('Proprietà calcolate automaticamente', 'success');
+                    } else {
+                        this.showNotification('Inserire dimensioni valide per il calcolo', 'error');
+                    }
+                } catch (error) {
+                    this.showNotification('Errore nel calcolo delle proprietà', 'error');
+                    console.error(error);
+                }
+            }
+            
+            // ========== NAVIGAZIONE ==========
+            
+            firstProfile() {
+                if (this.filteredProfili.length > 0) {
+                    this.currentIndex = 0;
+                    this.setFormData(this.filteredProfili[this.currentIndex]);
+                    this.updateUI();
+                }
+            }
+            
+            previousProfile() {
+                if (this.currentIndex > 0 && this.filteredProfili.length > 0) {
+                    this.currentIndex--;
+                    this.setFormData(this.filteredProfili[this.currentIndex]);
+                    this.updateUI();
+                }
+            }
+            
+            nextProfile() {
+                if (this.currentIndex < this.filteredProfili.length - 1) {
+                    this.currentIndex++;
+                    this.setFormData(this.filteredProfili[this.currentIndex]);
+                    this.updateUI();
+                }
+            }
+            
+            lastProfile() {
+                if (this.filteredProfili.length > 0) {
+                    this.currentIndex = this.filteredProfili.length - 1;
+                    this.setFormData(this.filteredProfili[this.currentIndex]);
+                    this.updateUI();
+                }
+            }
+            
+            // ========== INTERFACCIA ==========
+            
+            updateUI() {
+                // Applica filtro di ricerca
+                if (this.searchTerm) {
+                    this.filteredProfili = this.profili.filter(p => 
+                        p.Designazione.toUpperCase().includes(this.searchTerm)
+                    );
+                } else {
+                    this.filteredProfili = [...this.profili];
+                }
+                
+                // Aggiorna la tabella
+                this.updateTable();
+                
+                // Aggiorna la paginazione
+                this.updatePagination();
+                
+                // Aggiorna le statistiche
+                this.updateStats();
+                
+                // Abilita/disabilita pulsanti
+                this.updateButtons();
+            }
+            
+            updateTable() {
+                this.tableBody.innerHTML = '';
+                
+                this.filteredProfili.forEach((profilo, index) => {
+                    const row = document.createElement('tr');
+                    
+                    // Evidenzia la riga corrente
+                    if (index === this.currentIndex) {
+                        row.classList.add('selected');
+                    }
+                    
+                    row.innerHTML = `
+                        <td>${profilo.Designazione}</td>
+                        <td>${profilo.h.toFixed(1)}</td>
+                        <td>${profilo.b.toFixed(1)}</td>
+                        <td>${profilo.Sezione.toFixed(2)}</td>
+                        <td>${profilo.Peso.toFixed(2)}</td>
+                        <td>${profilo.Jx.toFixed(1)}</td>
+                        <td>
+                            <div class="table-actions">
+                                <button class="action-btn edit-btn" data-index="${index}">
+                                    <i class="fas fa-edit"></i> Modifica
+                                </button>
+                                <button class="action-btn delete-btn" data-index="${index}">
+                                    <i class="fas fa-trash"></i> Elimina
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    
+                    this.tableBody.appendChild(row);
+                });
+                
+                // Aggiungi event listeners ai pulsanti nella tabella
+                this.tableBody.querySelectorAll('.edit-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const index = parseInt(e.currentTarget.getAttribute('data-index'));
+                        this.selectProfile(index);
+                    });
+                });
+                
+                this.tableBody.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const index = parseInt(e.currentTarget.getAttribute('data-index'));
+                        this.deleteProfileByIndex(index);
+                    });
+                });
+                
+                // Seleziona la riga corrente
+                const rows = this.tableBody.querySelectorAll('tr');
+                if (this.currentIndex >= 0 && this.currentIndex < rows.length) {
+                    rows[this.currentIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+            
+            updatePagination() {
+                const total = this.filteredProfili.length;
+                const current = this.currentIndex + 1;
+                
+                if (total > 0 && this.currentIndex >= 0) {
+                    this.pageInfo.textContent = `${current}/${total}`;
+                } else {
+                    this.pageInfo.textContent = '0/0';
+                }
+            }
+            
+            updateButtons() {
+                const hasProfiles = this.filteredProfili.length > 0;
+                const hasCurrent = this.currentIndex >= 0 && this.currentIndex < this.filteredProfili.length;
+                
+                // Pulsanti navigazione
+                this.btnPrimo.disabled = !hasProfiles || this.currentIndex <= 0;
+                this.btnPrecedente.disabled = !hasProfiles || this.currentIndex <= 0;
+                this.btnSuccessivo.disabled = !hasProfiles || this.currentIndex >= this.filteredProfili.length - 1;
+                this.btnUltimo.disabled = !hasProfiles || this.currentIndex >= this.filteredProfili.length - 1;
+                
+                // Pulsante elimina
+                this.btnElimina.disabled = !hasCurrent;
+                
+                // Pulsante dettaglio
+                this.btnDettaglio.disabled = !hasCurrent;
+            }
+            
+            updateStats() {
+                const statsContainer = document.getElementById('statsContainer');
+                
+                if (this.profili.length === 0) {
+                    statsContainer.innerHTML = '<p>Nessun profilo disponibile per le statistiche</p>';
+                    return;
+                }
+                
+                // Calcola statistiche
+                const altezze = this.profili.map(p => p.h);
+                const pesi = this.profili.map(p => p.Peso);
+                const aree = this.profili.map(p => p.Sezione);
+                
+                const stats = [
+                    {
+                        label: 'Profili Totali',
+                        value: this.profili.length,
+                        icon: 'fas fa-shapes'
+                    },
+                    {
+                        label: 'Altezza Media',
+                        value: (altezze.reduce((a, b) => a + b, 0) / altezze.length).toFixed(1) + ' mm',
+                        icon: 'fas fa-ruler-vertical'
+                    },
+                    {
+                        label: 'Peso Medio',
+                        value: (pesi.reduce((a, b) => a + b, 0) / pesi.length).toFixed(2) + ' kg/m',
+                        icon: 'fas fa-weight-hanging'
+                    },
+                    {
+                        label: 'Area Media',
+                        value: (aree.reduce((a, b) => a + b, 0) / aree.length).toFixed(2) + ' cm²',
+                        icon: 'fas fa-square'
+                    }
+                ];
+                
+                statsContainer.innerHTML = stats.map(stat => `
+                    <div class="stat-card">
+                        <div class="stat-value">${stat.value}</div>
+                        <div class="stat-label"><i class="${stat.icon}"></i> ${stat.label}</div>
+                    </div>
+                `).join('');
+            }
+            
+            selectProfile(index) {
+                if (index >= 0 && index < this.filteredProfili.length) {
+                    this.currentIndex = index;
+                    this.setFormData(this.filteredProfili[index]);
+                    this.updateUI();
+                }
+            }
+            
+            deleteProfileByIndex(index) {
+                if (index >= 0 && index < this.filteredProfili.length) {
+                    const profilo = this.filteredProfili[index];
+                    
+                    if (confirm(`Eliminare il profilo ${profilo.Designazione}?`)) {
+                        // Trova l'indice nella lista completa
+                        const fullIndex = this.profili.findIndex(p => 
+                            p.Designazione === profilo.Designazione
+                        );
+                        
+                        if (fullIndex >= 0) {
+                            this.profili.splice(fullIndex, 1);
+                            this.saveToLocalStorage();
+                            this.updateUI();
+                            this.showNotification(`Profilo ${profilo.Designazione} eliminato`, 'success');
+                        }
+                    }
+                }
+            }
+            
+            // ========== FILE OPERATIONS ==========
+            
+            saveCSV() {
+                if (this.profili.length === 0) {
+                    this.showNotification('Nessun profilo da esportare!', 'error');
+                    return;
+                }
+                
+                // Crea intestazione CSV
+                const headers = [
+                    'Designazione', 'h', 'b', 'a', 'e', 'r',
+                    'Sezione', 'Peso', 'Jx', 'Jy', 'Wx', 'Wy', 'ix', 'iy'
+                ];
+                
+                // Crea righe CSV
+                const rows = this.profili.map(profilo => 
+                    headers.map(header => profilo[header]).join(',')
+                );
+                
+                // Combina tutto
+                const csvContent = [headers.join(','), ...rows].join('\n');
+                
+                // Crea blob e scarica
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                const url = URL.createObjectURL(blob);
+                
+                link.setAttribute('href', url);
+                link.setAttribute('download', `profili_h_${new Date().toISOString().slice(0,10)}.csv`);
+                link.style.visibility = 'hidden';
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                this.showNotification(`Esportati ${this.profili.length} profili in CSV`, 'success');
+            }
+            
+            loadCSV() {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.csv,.txt';
+                
+                input.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    
+                    const reader = new FileReader();
+                    
+                    reader.onload = (e) => {
+                        try {
+                            const content = e.target.result;
+                            const lines = content.split('\n');
+                            
+                            if (lines.length < 2) {
+                                this.showNotification('File CSV vuoto o non valido', 'error');
+                                return;
+                            }
+                            
+                            const headers = lines[0].split(',').map(h => h.trim());
+                            const nuoviProfili = [];
+                            
+                            for (let i = 1; i < lines.length; i++) {
+                                if (lines[i].trim() === '') continue;
+                                
+                                const values = lines[i].split(',');
+                                const profilo = {};
+                                
+                                headers.forEach((header, index) => {
+                                    if (index < values.length) {
+                                        const val = values[index].trim();
+                                        if (header === 'Designazione') {
+                                            profilo[header] = val;
+                                        } else {
+                                            profilo[header] = parseFloat(val.replace(',', '.')) || 0;
+                                        }
+                                    }
+                                });
+                                
+                                if (profilo.Designazione) {
+                                    nuoviProfili.push(profilo);
+                                }
+                            }
+                            
+                            if (nuoviProfili.length > 0) {
+                                // Chiedi all'utente come procedere
+                                if (confirm(`Caricare ${nuoviProfili.length} profili dal CSV?\nScegli OK per aggiungere, Annulla per sostituire.`)) {
+                                    // Aggiungi ai profili esistenti
+                                    this.profili.push(...nuoviProfili);
+                                } else {
+                                    // Sostituisci tutti i profili
+                                    this.profili = nuoviProfili;
+                                }
+                                
+                                this.saveToLocalStorage();
+                                this.updateUI();
+                                this.showNotification(`Caricati ${nuoviProfili.length} profili da CSV`, 'success');
+                            } else {
+                                this.showNotification('Nessun profilo valido trovato nel CSV', 'error');
+                            }
+                            
+                        } catch (error) {
+                            this.showNotification('Errore nella lettura del file CSV', 'error');
+                            console.error(error);
+                        }
+                    };
+                    
+                    reader.readAsText(file);
+                };
+                
+                input.click();
+            }
+            
+            exportExcel() {
+                if (this.profili.length === 0) {
+                    this.showNotification('Nessun profilo da esportare!', 'error');
+                    return;
+                }
+                
+                // Creazione di un file Excel semplice in formato HTML table
+                const headers = [
+                    'Designazione', 'h (mm)', 'b (mm)', 'a (mm)', 'e (mm)', 'r (mm)',
+                    'Sezione (cm²)', 'Peso (kg/m)', 'Jx (cm⁴)', 'Jy (cm⁴)', 
+                    'Wx (cm³)', 'Wy (cm³)', 'ix (cm)', 'iy (cm)'
+                ];
+                
+                let html = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <meta charset="UTF-8">
+                        <title>Profili Serie H</title>
+                        <style>
+                            table { border-collapse: collapse; width: 100%; }
+                            th, td { border: 1px solid #000; padding: 8px; text-align: center; }
+                            th { background-color: #2c3e50; color: white; }
+                            tr:nth-child(even) { background-color: #f2f2f2; }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>Profili Serie H - Esportazione ${new Date().toLocaleDateString()}</h1>
+                        <table>
+                            <thead>
+                                <tr>
+                                    ${headers.map(h => `<th>${h}</th>`).join('')}
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                
+                this.profili.forEach(profilo => {
+                    html += '<tr>';
+                    html += `<td>${profilo.Designazione}</td>`;
+                    html += `<td>${profilo.h.toFixed(1)}</td>`;
+                    html += `<td>${profilo.b.toFixed(1)}</td>`;
+                    html += `<td>${profilo.a.toFixed(2)}</td>`;
+                    html += `<td>${profilo.e.toFixed(2)}</td>`;
+                    html += `<td>${profilo.r.toFixed(1)}</td>`;
+                    html += `<td>${profilo.Sezione.toFixed(2)}</td>`;
+                    html += `<td>${profilo.Peso.toFixed(2)}</td>`;
+                    html += `<td>${profilo.Jx.toFixed(1)}</td>`;
+                    html += `<td>${profilo.Jy.toFixed(1)}</td>`;
+                    html += `<td>${profilo.Wx.toFixed(1)}</td>`;
+                    html += `<td>${profilo.Wy.toFixed(1)}</td>`;
+                    html += `<td>${profilo.ix.toFixed(2)}</td>`;
+                    html += `<td>${profilo.iy.toFixed(2)}</td>`;
+                    html += '</tr>';
+                });
+                
+                html += `
+                            </tbody>
+                        </table>
+                        <p>Totale profili: ${this.profili.length}</p>
+                    </body>
+                    </html>
+                `;
+                
+                // Crea blob e scarica
+                const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+                const link = document.createElement('a');
+                const url = URL.createObjectURL(blob);
+                
+                link.setAttribute('href', url);
+                link.setAttribute('download', `profili_h_${new Date().toISOString().slice(0,10)}.xls`);
+                link.style.visibility = 'hidden';
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                this.showNotification(`Esportati ${this.profili.length} profili in Excel`, 'success');
+            }
+            
+            showDetail() {
+                if (this.currentIndex < 0 || this.currentIndex >= this.filteredProfili.length) {
+                    this.showNotification('Nessun profilo selezionato!', 'error');
+                    return;
+                }
+                
+                const profilo = this.filteredProfili[this.currentIndex];
+                
+                this.modalTitle.textContent = `Dettaglio Profilo: ${profilo.Designazione}`;
+                
+                // Calcola rapporti caratteristici
+                const rapportoHB = profilo.b > 0 ? profilo.h / profilo.b : 0;
+                const rapportoJ = profilo.Jy > 0 ? profilo.Jx / profilo.Jy : 0;
+                const rapportoW = profilo.Wy > 0 ? profilo.Wx / profilo.Wy : 0;
+                
+                this.modalBody.innerHTML = `
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <h4 style="margin-bottom: 15px; color: #2c3e50;">Dati Geometrici</h4>
+                            <table style="width: 100%;">
+                                <tr><td><strong>Altezza (h):</strong></td><td>${profilo.h.toFixed(1)} mm</td></tr>
+                                <tr><td><strong>Larghezza ali (b):</strong></td><td>${profilo.b.toFixed(1)} mm</td></tr>
+                                <tr><td><strong>Spessore anima (a):</strong></td><td>${profilo.a.toFixed(2)} mm</td></tr>
+                                <tr><td><strong>Spessore ali (e):</strong></td><td>${profilo.e.toFixed(2)} mm</td></tr>
+                                <tr><td><strong>Raggio raccordo (r):</strong></td><td>${profilo.r.toFixed(1)} mm</td></tr>
+                                <tr><td><strong>Area sezione:</strong></td><td>${profilo.Sezione.toFixed(2)} cm²</td></tr>
+                                <tr><td><strong>Peso:</strong></td><td>${profilo.Peso.toFixed(2)} kg/m</td></tr>
+                            </table>
+                        </div>
+                        
+                        <div>
+                            <h4 style="margin-bottom: 15px; color: #2c3e50;">Proprietà Meccaniche</h4>
+                            <table style="width: 100%;">
+                                <tr><td><strong>Mom. inerzia Jx:</strong></td><td>${profilo.Jx.toFixed(1)} cm⁴</td></tr>
+                                <tr><td><strong>Mom. inerzia Jy:</strong></td><td>${profilo.Jy.toFixed(1)} cm⁴</td></tr>
+                                <tr><td><strong>Mod. resistenza Wx:</strong></td><td>${profilo.Wx.toFixed(1)} cm³</td></tr>
+                                <tr><td><strong>Mod. resistenza Wy:</strong></td><td>${profilo.Wy.toFixed(1)} cm³</td></tr>
+                                <tr><td><strong>Raggio inerzia ix:</strong></td><td>${profilo.ix.toFixed(2)} cm</td></tr>
+                                <tr><td><strong>Raggio inerzia iy:</strong></td><td>${profilo.iy.toFixed(2)} cm</td></tr>
+                            </table>
+                            
+                            <h4 style="margin-top: 20px; margin-bottom: 15px; color: #2c3e50;">Rapporti Caratteristici</h4>
+                            <table style="width: 100%;">
+                                <tr><td><strong>Rapporto h/b:</strong></td><td>${rapportoHB.toFixed(2)}</td></tr>
+                                <tr><td><strong>Rapporto Jx/Jy:</strong></td><td>${rapportoJ.toFixed(2)}</td></tr>
+                                <tr><td><strong>Rapporto Wx/Wy:</strong></td><td>${rapportoW.toFixed(2)}</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                `;
+                
+                this.showModal();
+            }
+            
+            // ========== LOCAL STORAGE ==========
+            
+            saveToLocalStorage() {
+                try {
+                    localStorage.setItem(this.storageKey, JSON.stringify(this.profili));
+                    this.showNotification('Dati salvati nel browser', 'success');
+                    return true;
+                } catch (error) {
+                    this.showNotification('Errore nel salvataggio dei dati', 'error');
+                    console.error(error);
+                    return false;
+                }
+            }
+            
+            loadFromLocalStorage() {
+                try {
+                    const saved = localStorage.getItem(this.storageKey);
+                    if (saved) {
+                        this.profili = JSON.parse(saved);
+                        this.updateUI();
+                        
+                        if (this.profili.length > 0) {
+                            this.currentIndex = 0;
+                            this.setFormData(this.profili[0]);
+                            this.showNotification(`Caricati ${this.profili.length} profili dal browser`, 'success');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Errore nel caricamento dei dati:', error);
+                }
+            }
+            
+            clearData() {
+                if (confirm('ATTENZIONE: Azzerare tutti i dati? Questa operazione non è reversibile.')) {
+                    this.profili = [];
+                    this.currentIndex = -1;
+                    this.newProfile();
+                    localStorage.removeItem(this.storageKey);
+                    this.showNotification('Tutti i dati sono stati eliminati', 'success');
+                }
+            }
+            
+            loadExampleData() {
+                const exampleData = [
+                    {
+                        Designazione: 'IPE200',
+                        h: 200.0, b: 100.0, a: 5.6, e: 8.5, r: 12.0,
+                        Sezione: 28.48, Peso: 22.4,
+                        Jx: 1943.0, Jy: 142.4,
+                        Wx: 194.3, Wy: 28.5,
+                        ix: 8.26, iy: 2.24
+                    },
+                    {
+                        Designazione: 'IPE300',
+                        h: 300.0, b: 150.0, a: 7.1, e: 10.7, r: 15.0,
+                        Sezione: 53.81, Peso: 42.2,
+                        Jx: 8356.0, Jy: 603.8,
+                        Wx: 557.0, Wy: 80.5,
+                        ix: 12.46, iy: 3.35
+                    },
+                    {
+                        Designazione: 'HEA200',
+                        h: 190.0, b: 200.0, a: 6.5, e: 10.0, r: 18.0,
+                        Sezione: 53.83, Peso: 42.3,
+                        Jx: 3692.0, Jy: 1336.0,
+                        Wx: 388.6, Wy: 133.6,
+                        ix: 8.28, iy: 4.98
+                    },
+                    {
+                        Designazione: 'HEB300',
+                        h: 300.0, b: 300.0, a: 11.0, e: 19.0, r: 27.0,
+                        Sezione: 149.1, Peso: 117.0,
+                        Jx: 25170.0, Jy: 8563.0,
+                        Wx: 1678.0, Wy: 571.0,
+                        ix: 13.0, iy: 7.58
+                    }
+                ];
+                
+                if (confirm('Caricare dati di esempio? I dati esistenti verranno mantenuti.')) {
+                    exampleData.forEach(profilo => {
+                        // Evita duplicati
+                        if (!this.profili.some(p => p.Designazione === profilo.Designazione)) {
+                            this.profili.push(profilo);
+                        }
+                    });
+                    
+                    this.saveToLocalStorage();
+                    this.updateUI();
+                    
+                    if (this.profili.length > 0 && this.currentIndex < 0) {
+                        this.currentIndex = 0;
+                        this.setFormData(this.profili[0]);
+                    }
+                    
+                    this.showNotification('Dati di esempio caricati', 'success');
+                }
+            }
+            
+            // ========== MODAL & NOTIFICATION ==========
+            
+            showModal() {
+                this.detailModal.style.display = 'flex';
+            }
+            
+            hideModal() {
+                this.detailModal.style.display = 'none';
+            }
+            
+            showNotification(message, type = 'info') {
+                this.notificationText.textContent = message;
+                
+                // Rimuovi tutte le classi di tipo precedenti
+                this.notification.classList.remove('notification-success', 'notification-error', 'notification-info');
+                
+                // Aggiungi la classe corretta
+                switch(type) {
+                    case 'success':
+                        this.notification.classList.add('notification-success');
+                        break;
+                    case 'error':
+                        this.notification.classList.add('notification-error');
+                        break;
+                    default:
+                        this.notification.classList.add('notification-info');
+                }
+                
+                // Mostra la notifica
+                this.notification.classList.add('show');
+                
+                // Nascondi dopo 3 secondi
+                setTimeout(() => {
+                    this.notification.classList.remove('show');
+                }, 3000);
+            }
+        }
+        
+        // Inizializza l'applicazione quando la pagina è caricata
+        document.addEventListener('DOMContentLoaded', () => {
+            window.profiliApp = new ProfiliHManager();
+        });
+    </script>
+</body>
+</html>
