@@ -7,6 +7,7 @@ Ultimo Aggiornamento 19-02-2026***
 
 **CalcoloPesoTubi**
 - Applicazione web per il calcolo dei condotti metallici
+<img width="800" height="418" alt="image" src="https://github.com/user-attachments/assets/a379be97-649a-46e5-bb7f-80789fdfb902" />
 
 **Conversione_mmToDPI**
 - Applicazione web per la comversione di mm in DPI
