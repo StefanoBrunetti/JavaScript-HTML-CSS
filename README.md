@@ -3,6 +3,7 @@ Ultimo Aggiornamento 19-02-2026***
 
 **CalcolatriceWeb:**
 - Applicazione che visualizza una semplice calcolatrice che può essere ci colore chiaro o scuro`
+<img width="800" height="450" alt="image" src="https://github.com/user-attachments/assets/61ebbe5d-601f-4e5d-9ca5-d2e055d90566" />
 
 **CalcoloPesoTubi**
 - Applicazione web per il calcolo dei condotti metallici
